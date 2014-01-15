@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+
+.settings
+
+
+/bin
+
+.classpath
+
+.project
