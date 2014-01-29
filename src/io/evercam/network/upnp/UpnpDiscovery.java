@@ -31,7 +31,7 @@ public class UpnpDiscovery
 			devices = Discovery.discover(Discovery.DEFAULT_TIMEOUT,
 					Discovery.DEFAULT_TTL, Discovery.DEFAULT_MX,
 					DEFAULT_DEVICE_TYPE, null);
-			if (devices.length != 0 && devices != null)
+			if (devices != null)
 			{
 				for (int i = 0; i < devices.length; i++)
 				{
