@@ -2,6 +2,7 @@ package io.evercam.network.ipscan;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class PortScan
@@ -21,7 +22,8 @@ public class PortScan
 		try
 		{
 			InetAddress ip_net = InetAddress.getByName(ip);
-			Socket socket = new Socket(ip_net, port);
+			Socket socket = new Socket();
+			socket.connect(new InetSocketAddress(ip_net, port), 1000);
 			socket.close();
 			return true;
 		}
@@ -29,6 +31,10 @@ public class PortScan
 		{
 			return false;
 		}
+		catch (Exception ex) 
+		{
+            return false;
+        }
 	}
 
 	// scan both stand and common ports
