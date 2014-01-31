@@ -16,13 +16,13 @@ public class PortScan
 		this.portScanResult = portScanResult;
 	}
 
-	// check ip:port is reachable or not, using socket connection
 	public static boolean isPortReachable(String ip, int port)
 	{
 		try
 		{
 			InetAddress ip_net = InetAddress.getByName(ip);
-			new Socket(ip_net, port);
+			Socket socket = new Socket(ip_net, port);
+			socket.close();
 			return true;
 		}
 		catch (IOException e)
