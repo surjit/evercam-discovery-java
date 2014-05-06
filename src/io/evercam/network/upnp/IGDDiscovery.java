@@ -22,7 +22,7 @@ public class IGDDiscovery
 	public int tableSize = 0;;
 	public boolean isRouterIGD;
 
-	public IGDDiscovery(String routerIP)
+	public IGDDiscovery(String routerIP) throws Exception
 	{
 		this.routerIP = routerIP;
 		try
@@ -57,11 +57,6 @@ public class IGDDiscovery
 		catch (UPNPResponseException e)
 		{
 			e.printStackTrace();
-		}
-
-		catch (NullPointerException e)
-		{
-
 		}
 	}
 

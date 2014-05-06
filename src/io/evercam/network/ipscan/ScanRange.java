@@ -6,7 +6,7 @@ public class ScanRange
 	private long scanStart;
 	private long scanEnd;
 	
-	public ScanRange(String ip, String subnetMask)
+	public ScanRange(String ip, String subnetMask) throws Exception
 	{
 		scanIp = IpTranslator.getUnsignedLongFromIp(ip);
 
