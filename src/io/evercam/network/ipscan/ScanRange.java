@@ -1,16 +1,31 @@
 package io.evercam.network.ipscan;
 
+import java.net.NetworkInterface;
+
 public class ScanRange
 {
 	private long scanIp;
 	private long scanStart;
 	private long scanEnd;
-	
+
 	public ScanRange(String ip, String subnetMask) throws Exception
 	{
 		scanIp = IpTranslator.getUnsignedLongFromIp(ip);
 
 		int cidr = IpTranslator.maskIpToCidr(subnetMask);
+		setUpStartAndEnd(cidr);
+	}
+
+	public ScanRange(NetworkInterface networkInterface) throws Exception
+	{
+		scanIp = IpTranslator.getUnsignedLongFromIp(NetworkInfo
+				.getIpFromInterface(networkInterface));
+		int cidr = NetworkInfo.getCidrFromInterface(networkInterface);
+		setUpStartAndEnd(cidr);
+	}
+
+	private void setUpStartAndEnd(int cidr)
+	{
 		int shift = (32 - cidr);
 		if (cidr < 31)
 		{
@@ -23,12 +38,12 @@ public class ScanRange
 			scanEnd = (scanStart | ((1 << shift) - 1));
 		}
 	}
-	
-	protected int countSize()
+
+	public int size()
 	{
 		return (int) (scanEnd - scanStart + 1);
 	}
-	
+
 	protected long getScanIp()
 	{
 		return scanIp;

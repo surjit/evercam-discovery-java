@@ -32,7 +32,7 @@ public class IpScan
 
 			long pt_backward = ip;
 			long pt_forward = ip + 1;
-			long size_hosts = scanRange.countSize() - 1;
+			long size_hosts = scanRange.size() - 1;
 
 			for (int i = 0; i < size_hosts; i++)
 			{

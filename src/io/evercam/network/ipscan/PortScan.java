@@ -17,7 +17,7 @@ public class PortScan
 		this.portScanResult = portScanResult;
 	}
 
-	public static boolean isPortReachable(String ip, int port)
+	public static boolean isPortReachable(String ip, int port) throws Exception
 	{
 		try
 		{
@@ -31,14 +31,10 @@ public class PortScan
 		{
 			return false;
 		}
-		catch (Exception ex) 
-		{
-            return false;
-        }
 	}
 
 	// scan both stand and common ports
-	public void start(String ip)
+	public void start(String ip) throws Exception
 	{
 		scanByStandard(ip, STANDARD_PORTS, 0);
 		scanByStandard(ip, getCommonPorts(ip), 1);
@@ -57,7 +53,7 @@ public class PortScan
 		return commonPorts;
 	}
 
-	public void scanByStandard(String ip, int[] ports, int type)
+	public void scanByStandard(String ip, int[] ports, int type) throws Exception
 	{
 		// type = 0: stantard port
 		// type = 1: common port
