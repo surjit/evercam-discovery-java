@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class PortScan
 {
 	PortScanResult portScanResult;
+	private ArrayList<Integer> activePortList;
 	public final int[] STANDARD_PORTS = { 20, 21, 22, 80, 443, 554 };
 	public static final int TYPE_COMMON = 1;
 	public static final int TYPE_STANDARD = 0;
@@ -36,6 +38,7 @@ public class PortScan
 	// scan both stand and common ports
 	public void start(String ip) throws Exception
 	{
+		activePortList = new ArrayList<Integer>();
 		scanByStandard(ip, STANDARD_PORTS, 0);
 		scanByStandard(ip, getCommonPorts(ip), 1);
 	}
@@ -55,7 +58,7 @@ public class PortScan
 
 	public void scanByStandard(String ip, int[] ports, int type) throws Exception
 	{
-		// type = 0: stantard port
+		// type = 0: standard port
 		// type = 1: common port
 		int port;
 		for (int i = 0; i < ports.length; i++)
@@ -63,8 +66,24 @@ public class PortScan
 			port = ports[i];
 			if (isPortReachable(ip, port))
 			{
-				portScanResult.onPortActive(port, type);
+				activePortList.add(port);
+				if(portScanResult != null)
+				{
+					portScanResult.onPortActive(port, type);
+				}
 			}
+		}
+	}
+	
+	public ArrayList<Integer> getActivePorts() throws EvercamException
+	{
+		if(activePortList != null)
+		{
+		return activePortList;
+		}
+		else
+		{
+			throw new EvercamException(EvercamException.MSG_PORT_SCAN_NOT_STARTED);
 		}
 	}
 

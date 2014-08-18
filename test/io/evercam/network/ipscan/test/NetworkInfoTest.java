@@ -13,6 +13,7 @@ public class NetworkInfoTest
 {
 	private final String TEST_IP = "192.168.1.122";
 	private final String TEST_NET_MASK = "255.255.255.0";
+	private final String TEST_EXTERNAL_IP = "89.101.200.163";
 	private final int TEST_CIDR = 24;
 
 	@Test
@@ -29,5 +30,11 @@ public class NetworkInfoTest
 	{
 		assertEquals(TEST_NET_MASK, IpTranslator.cidrToMask(TEST_CIDR));
 		assertEquals(TEST_CIDR, IpTranslator.maskIpToCidr(TEST_NET_MASK));
+	}
+	
+	@Test
+	public void testExternalIp()
+	{
+		assertEquals(TEST_EXTERNAL_IP, NetworkInfo.getExternalIP());
 	}
 }

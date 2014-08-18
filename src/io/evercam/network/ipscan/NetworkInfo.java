@@ -1,5 +1,7 @@
 package io.evercam.network.ipscan;
 
+import io.evercam.network.camera.Constants;
+
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -9,6 +11,14 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
 
 public class NetworkInfo
 {
@@ -50,8 +60,8 @@ public class NetworkInfo
 	}
 
 	/**
-	 * Return network interface by interface name.
-	 * Return null if no interface matches the given name.
+	 * Return network interface by interface name. Return null if no interface
+	 * matches the given name.
 	 */
 	public static NetworkInterface getNetworkInterfaceByName(String interfaceName)
 	{
@@ -90,10 +100,10 @@ public class NetworkInfo
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Return network interface by host IP address.
-	 * Return null if no interface matches the given IP
+	 * Return network interface by host IP address. Return null if no interface
+	 * matches the given IP
 	 */
 	public static NetworkInterface getNetworkInterfaceByIp(String ipAddress)
 	{
@@ -134,42 +144,68 @@ public class NetworkInfo
 	}
 
 	/**
-	 * Return the network prefix length.
-	 * Return 0 if no CIDR detected.
+	 * Return the network prefix length. Return 0 if no CIDR detected.
 	 */
-	 public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
-	 {
-		 for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-		 {
-			 InetAddress inetAddress= address.getAddress();
-			 if(!inetAddress.isLoopbackAddress())
-			 {
-				 if(inetAddress instanceof Inet4Address)
-				 {
-					 return address.getNetworkPrefixLength();
-				 }
-			 }
-		 } 
-		 return 0;
-	 }
-	 
-		/**
-		 * Return the valid ipv4 address for the given network interface.
-		 * Return empty string if IP address available.
-		 */
-		 public static String getIpFromInterface(NetworkInterface networkInterface) throws IOException
-		 {
-			 for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-			 {
-				 InetAddress inetAddress= address.getAddress();
-				 if(!inetAddress.isLoopbackAddress())
-				 {
-					 if(inetAddress instanceof Inet4Address)
-					 {
-						 return inetAddress.getHostAddress();
-					 }
-				 }
-			 } 
-			 return "";
-		 }
+	public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
+	{
+		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+		{
+			InetAddress inetAddress = address.getAddress();
+			if (!inetAddress.isLoopbackAddress())
+			{
+				if (inetAddress instanceof Inet4Address)
+				{
+					return address.getNetworkPrefixLength();
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Return the valid ipv4 address for the given network interface. Return
+	 * empty string if IP address available.
+	 */
+	public static String getIpFromInterface(NetworkInterface networkInterface) throws IOException
+	{
+		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+		{
+			InetAddress inetAddress = address.getAddress();
+			if (!inetAddress.isLoopbackAddress())
+			{
+				if (inetAddress instanceof Inet4Address)
+				{
+					return inetAddress.getHostAddress();
+				}
+			}
+		}
+		return "";
+	}
+	
+	public static String getExternalIP()
+	{
+		String extIP = null;
+		HttpClient httpclient = new DefaultHttpClient();
+		httpclient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 2000);
+		httpclient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 2000);
+		try
+		{
+			HttpGet httpget = new HttpGet(Constants.URL_GET_EXTERNAL_ADDR);
+			HttpResponse response;
+			response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			if (entity != null)
+			{
+				extIP = EntityUtils.toString(entity);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			httpclient.getConnectionManager().shutdown();
+		}
+		return (extIP == null ? null : extIP.replace("\n", ""));
+	}
 }
