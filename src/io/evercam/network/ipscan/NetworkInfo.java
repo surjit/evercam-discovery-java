@@ -181,7 +181,7 @@ public class NetworkInfo
 		}
 		return "";
 	}
-	
+
 	public static String getExternalIP()
 	{
 		String extIP = null;

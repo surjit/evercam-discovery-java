@@ -7,6 +7,8 @@ import io.evercam.EvercamException;
 import io.evercam.Vendor;
 import io.evercam.network.camera.Constants;
 import io.evercam.network.camera.DiscoveredCamera;
+import io.evercam.network.upnp.UpnpDevice;
+import io.evercam.network.upnp.UpnpDiscovery;
 
 public class EvercamDiscover
 {
@@ -29,6 +31,11 @@ public class EvercamDiscover
 		});
 		ipScan.scanAll(scanRange);
 
+		// Start UPnP discovery
+		UpnpDiscovery upnpDiscovery = new UpnpDiscovery(null);
+		upnpDiscovery.discoverAll();
+		ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
+
 		// For each active IP, request for MAC address and vendor
 		for (String ip : activeIpList)
 		{
@@ -41,17 +48,24 @@ public class EvercamDiscover
 					String vendorId = vendor.getId();
 					if (!vendorId.isEmpty())
 					{
-						// Then fill details and do port scan.
+						// Then fill details discovered from IP scan
 						DiscoveredCamera camera = new DiscoveredCamera(ip);
 						camera.setMAC(macAddress);
 						camera.setVendor(vendorId);
 						camera.setFlag(Constants.TYPE_CAMERA);
 						camera.setExternalIp(externalIp);
 
+						// Start port scan
 						PortScan portScan = new PortScan(null);
 						portScan.start(ip);
 						ArrayList<Integer> activePortList = portScan.getActivePorts();
-						addPortsInfoToCamera(camera, activePortList);
+
+						// Add active ports to camera object
+						camera = addPortsInfoToCamera(camera, activePortList);
+
+						// Add details discovered from UPnP to camera object
+						camera = mergeUpnpDeviceToCamera(camera, deviceList);
+
 						cameraList.add(camera);
 					}
 				}
@@ -59,6 +73,30 @@ public class EvercamDiscover
 		}
 
 		return cameraList;
+	}
+
+	private DiscoveredCamera mergeUpnpDeviceToCamera(DiscoveredCamera camera,
+			ArrayList<UpnpDevice> upnpDeviceList)
+	{
+		for (UpnpDevice upnpDevice : upnpDeviceList)
+		{
+			// If IP address matches
+			String ipFromUpnp = upnpDevice.getIp();
+			if (ipFromUpnp != null && !ipFromUpnp.isEmpty())
+			{
+				if (camera.getIP().equals(ipFromUpnp))
+				{
+					int port = upnpDevice.getPort();
+					String model = upnpDevice.getModel();
+					if (port != 0)
+					{
+						camera.setHttp(port);
+					}
+					camera.setModel(model);
+				}
+			}
+		}
+		return camera;
 	}
 
 	private DiscoveredCamera addPortsInfoToCamera(DiscoveredCamera camera,

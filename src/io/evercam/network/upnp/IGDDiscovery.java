@@ -35,8 +35,7 @@ public class IGDDiscovery
 					String url = null;
 					InternetGatewayDevice testIGD = IGDs[i];
 
-					url = testIGD.getIGDRootDevice().getPresentationURL()
-							.toString();
+					url = testIGD.getIGDRootDevice().getPresentationURL().toString();
 					if (url.contains(routerIP))
 					{
 						IGD = testIGD;
@@ -81,8 +80,7 @@ public class IGDDiscovery
 		{
 			try
 			{
-				ActionResponse mapEntry = IGD
-						.getGenericPortMappingEntry(sizeIndex);
+				ActionResponse mapEntry = IGD.getGenericPortMappingEntry(sizeIndex);
 				String natIP = mapEntry
 						.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_CLIENT);
 				if (natIP.equals(ip))

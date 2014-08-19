@@ -21,17 +21,17 @@ public class NetworkInfoTest
 	{
 		NetworkInterface networkInterface = NetworkInfo.getNetworkInterfaceByIp(TEST_IP);
 		int cidr = NetworkInfo.getCidrFromInterface(networkInterface);
-		assertEquals(TEST_CIDR,cidr);
+		assertEquals(TEST_CIDR, cidr);
 		assertEquals(TEST_NET_MASK, IpTranslator.cidrToMask(cidr));
 	}
-	
+
 	@Test
 	public void testGetTranslateCidrToMask() throws IOException
 	{
 		assertEquals(TEST_NET_MASK, IpTranslator.cidrToMask(TEST_CIDR));
 		assertEquals(TEST_CIDR, IpTranslator.maskIpToCidr(TEST_NET_MASK));
 	}
-	
+
 	@Test
 	public void testExternalIp()
 	{

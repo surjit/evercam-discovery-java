@@ -16,7 +16,7 @@ public class IpScanTest
 	private final String TEST_ACTIVE_IP = "192.168.1.1";
 	private String TEST_IP = "192.168.1.122";
 	ArrayList<String> ipList = new ArrayList<String>();
-	
+
 	@Test
 	public void testScanSingleIp()
 	{
@@ -25,13 +25,14 @@ public class IpScanTest
 			public void onActiveIp(String ip)
 			{
 				ipList.add(ip);
-				
-			}});
+
+			}
+		});
 		ipScan.scanSingleIp(TEST_ACTIVE_IP, 3000);
 		assertEquals(TEST_ACTIVE_IP, ipList.get(0));
 		ipList.clear();
 	}
-	
+
 	@Test
 	public void testScanAllIp() throws Exception
 	{
@@ -40,8 +41,9 @@ public class IpScanTest
 			public void onActiveIp(String ip)
 			{
 				ipList.add(ip);
-				
-			}});
+
+			}
+		});
 		ipScan.scanAll(new ScanRange(NetworkInfo.getNetworkInterfaceByIp(TEST_IP)));
 		assertTrue(ipList.size() > 5);
 		ipList.clear();

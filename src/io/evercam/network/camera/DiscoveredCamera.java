@@ -44,7 +44,7 @@ public class DiscoveredCamera
 	{
 		return ip;
 	}
-	
+
 	public String getExternalIp()
 	{
 		return externalIp;
@@ -59,7 +59,7 @@ public class DiscoveredCamera
 	{
 		this.ip = ip;
 	}
-	
+
 	public void setExternalIp(String externalIp)
 	{
 		this.externalIp = externalIp;

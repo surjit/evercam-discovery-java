@@ -10,11 +10,13 @@ import java.util.regex.Pattern;
 
 public class MacAddress
 {
-	
+
 	/**
-	 * Read hardware address from ARP table by specified IP address(work for Android only).
-	 * If no MAC address associated, return 00:00:00:00:00:00.
-	 * @param ip host IP address
+	 * Read hardware address from ARP table by specified IP address(work for
+	 * Android only). If no MAC address associated, return 00:00:00:00:00:00.
+	 * 
+	 * @param ip
+	 *            host IP address
 	 */
 	public static String getByIpAndroid(String ip)
 	{

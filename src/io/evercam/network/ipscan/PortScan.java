@@ -13,7 +13,7 @@ public class PortScan
 	public final int[] STANDARD_PORTS = { 20, 21, 22, 80, 443, 554 };
 	public static final int TYPE_COMMON = 1;
 	public static final int TYPE_STANDARD = 0;
-	
+
 	public PortScan(PortScanResult portScanResult)
 	{
 		this.portScanResult = portScanResult;
@@ -67,19 +67,19 @@ public class PortScan
 			if (isPortReachable(ip, port))
 			{
 				activePortList.add(port);
-				if(portScanResult != null)
+				if (portScanResult != null)
 				{
 					portScanResult.onPortActive(port, type);
 				}
 			}
 		}
 	}
-	
+
 	public ArrayList<Integer> getActivePorts() throws EvercamException
 	{
-		if(activePortList != null)
+		if (activePortList != null)
 		{
-		return activePortList;
+			return activePortList;
 		}
 		else
 		{

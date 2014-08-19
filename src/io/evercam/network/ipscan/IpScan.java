@@ -14,12 +14,12 @@ public class IpScan
 	public static final int DEFAULT_FIXED_POOL = 75;
 	public ExecutorService pool;
 	private int pt_move = 2; // 1=backward 2=forward
-	
+
 	public IpScan(ScanResult scanResult)
 	{
 		this.scanResult = scanResult;
 	}
-	
+
 	public void scanAll(ScanRange scanRange)
 	{
 		long ip = scanRange.getScanIp();
@@ -81,16 +81,15 @@ public class IpScan
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	private void launch(long i)
 	{
 		if (!pool.isShutdown())
 		{
-			pool.execute(new SingleRunnable(IpTranslator
-					.getIpFromLongUnsigned(i),scanResult));
+			pool.execute(new SingleRunnable(IpTranslator.getIpFromLongUnsigned(i), scanResult));
 		}
 	}
-	
+
 	public void scanSingleIp(String ip, int timeout)
 	{
 		try
