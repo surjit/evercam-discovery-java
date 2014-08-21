@@ -1,7 +1,4 @@
-package io.evercam.network.upnp;
-
-import io.evercam.network.camera.Constants;
-import io.evercam.network.ipscan.EvercamException;
+package io.evercam.network.discovery;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +67,7 @@ public class UpnpDiscovery
 		}
 		else
 		{
-			throw new EvercamException(Constants.MSG_UPNP_NOT_STARTED);
+			throw new EvercamException(EvercamException.MSG_UPNP_NOT_STARTED);
 		}
 	}
 

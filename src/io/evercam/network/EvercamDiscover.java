@@ -1,21 +1,39 @@
-package io.evercam.network.ipscan;
+package io.evercam.network;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+import net.sbbi.upnp.messages.ActionResponse;
+
 import io.evercam.EvercamException;
 import io.evercam.Vendor;
-import io.evercam.network.camera.Constants;
-import io.evercam.network.camera.DiscoveredCamera;
-import io.evercam.network.upnp.UpnpDevice;
-import io.evercam.network.upnp.UpnpDiscovery;
+import io.evercam.network.discovery.DiscoveredCamera;
+import io.evercam.network.discovery.GatewayDevice;
+import io.evercam.network.discovery.IpScan;
+import io.evercam.network.discovery.MacAddress;
+import io.evercam.network.discovery.NetworkInfo;
+import io.evercam.network.discovery.PortScan;
+import io.evercam.network.discovery.ScanRange;
+import io.evercam.network.discovery.ScanResult;
+import io.evercam.network.discovery.UpnpDevice;
+import io.evercam.network.discovery.UpnpDiscovery;
 
 public class EvercamDiscover
 {
 	private ArrayList<String> activeIpList = new ArrayList<String>();
 
-	public ArrayList<DiscoveredCamera> discoverAllCamerasAndroid(ScanRange scanRange)
-			throws Exception
+	/**
+	 * The wrapped method to scan for cameras in Android platform.
+	 * 
+	 * @param scanRange
+	 *            the range of IP addresses to scan
+	 * @param routerIp
+	 *            gateway/router IP address
+	 * @return a list of discovered camera devices
+	 * @throws Exception
+	 */
+	public ArrayList<DiscoveredCamera> discoverAllCamerasAndroid(ScanRange scanRange,
+			String routerIp) throws Exception
 	{
 		ArrayList<DiscoveredCamera> cameraList = new ArrayList<DiscoveredCamera>();
 
@@ -35,6 +53,10 @@ public class EvercamDiscover
 		UpnpDiscovery upnpDiscovery = new UpnpDiscovery(null);
 		upnpDiscovery.discoverAll();
 		ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
+
+		// Start UPnP router discovery
+		GatewayDevice gatewayDevice = new GatewayDevice(routerIp);
+		ArrayList<ActionResponse> mapEntries = gatewayDevice.getNatTableArray();
 
 		// For each active IP, request for MAC address and vendor
 		for (String ip : activeIpList)
@@ -66,6 +88,9 @@ public class EvercamDiscover
 						// Add details discovered from UPnP to camera object
 						camera = mergeUpnpDeviceToCamera(camera, deviceList);
 
+						// Add details in discovered NAT table(mainly forwarded ports) 
+						camera = mergeNatTableToCamera(camera, mapEntries);
+						
 						cameraList.add(camera);
 					}
 				}
@@ -126,6 +151,32 @@ public class EvercamDiscover
 				else if (port_s.startsWith("9"))
 				{
 					camera.setRtsp(port);
+				}
+			}
+		}
+		return camera;
+	}
+	
+	private DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera, ArrayList<ActionResponse> mapEntries)
+	{
+		for(ActionResponse mapEntry : mapEntries)
+		{
+			String natIp = mapEntry
+					.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_CLIENT);
+			int natInternalPort = Integer.parseInt(mapEntry
+					.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_PORT));
+			int natExternalPort = Integer.parseInt(mapEntry
+					.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_EXTERNAL_PORT));
+			
+			if(camera.getIP().equals(natIp))
+			{
+				if(camera.getHttp() == natInternalPort)
+				{
+					camera.setExthttp(natExternalPort);
+				}
+				if(camera.getRtsp() == natInternalPort)
+				{
+					camera.setExtrtsp(natExternalPort);
 				}
 			}
 		}

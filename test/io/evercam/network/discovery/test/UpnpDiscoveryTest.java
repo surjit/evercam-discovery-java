@@ -1,12 +1,12 @@
-package io.evercam.network.upnp.test;
+package io.evercam.network.discovery.test;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import io.evercam.network.ipscan.EvercamException;
-import io.evercam.network.upnp.UpnpDevice;
-import io.evercam.network.upnp.UpnpDiscovery;
+import io.evercam.network.discovery.EvercamException;
+import io.evercam.network.discovery.UpnpDevice;
+import io.evercam.network.discovery.UpnpDiscovery;
 
 import org.junit.Test;
 

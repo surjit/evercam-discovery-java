@@ -1,4 +1,5 @@
-package io.evercam.network.ipscan;
+package io.evercam.network.discovery;
+
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -1,4 +1,4 @@
-package io.evercam.network.ipscan;
+package io.evercam.network.discovery;
 
 public interface ScanResult
 {

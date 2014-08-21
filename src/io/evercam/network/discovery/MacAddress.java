@@ -1,6 +1,6 @@
-package io.evercam.network.ipscan;
+package io.evercam.network.discovery;
 
-import io.evercam.network.camera.Constants;
+import io.evercam.network.Constants;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

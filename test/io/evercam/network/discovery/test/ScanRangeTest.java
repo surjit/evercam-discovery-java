@@ -1,11 +1,11 @@
-package io.evercam.network.ipscan.test;
+package io.evercam.network.discovery.test;
 
 import static org.junit.Assert.*;
 
 import java.net.NetworkInterface;
 
-import io.evercam.network.ipscan.NetworkInfo;
-import io.evercam.network.ipscan.ScanRange;
+import io.evercam.network.discovery.NetworkInfo;
+import io.evercam.network.discovery.ScanRange;
 
 import org.junit.Test;
 

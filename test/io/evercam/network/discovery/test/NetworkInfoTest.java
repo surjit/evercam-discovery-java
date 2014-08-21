@@ -1,8 +1,8 @@
-package io.evercam.network.ipscan.test;
+package io.evercam.network.discovery.test;
 
 import static org.junit.Assert.*;
-import io.evercam.network.ipscan.IpTranslator;
-import io.evercam.network.ipscan.NetworkInfo;
+import io.evercam.network.discovery.IpTranslator;
+import io.evercam.network.discovery.NetworkInfo;
 
 import java.io.IOException;
 import java.net.NetworkInterface;

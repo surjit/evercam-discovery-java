@@ -1,9 +1,16 @@
-package io.evercam.network.camera;
+package io.evercam.network.discovery;
 
+import io.evercam.network.Constants;
+
+import java.io.Serializable;
 import java.util.Locale;
 
-public class DiscoveredCamera
+/**
+ * The serializable camera object returned from discovery.
+ */
+public class DiscoveredCamera implements Serializable
 {
+	private static final long serialVersionUID = 2100241933714349000L;
 	private Integer id;
 	private String ip = "";
 	private String externalIp = "";
@@ -258,7 +265,7 @@ public class DiscoveredCamera
 	@Override
 	public String toString()
 	{
-		return "Camera [id=" + id + ", ip=" + ip + ", mac=" + mac + ", vendor=" + vendor
+		return "Camera [id=" + id + ", ip=" + ip  + ", externalIp=" + externalIp + ", mac=" + mac + ", vendor=" + vendor
 				+ ",model=" + model + ",bonjour=" + bonjour + ",upnp=" + upnp + ",onvif=" + onvif
 				+ ",http=" + http + ",rtsp=" + rtsp + ",https=" + https + ",ftp=" + ftp + ",ssh="
 				+ ssh + ",extrtsp=" + extrtsp + ",exthttp=" + exthttp + ",flag=" + flag
@@ -536,6 +543,15 @@ public class DiscoveredCamera
 	public boolean modelContainsVendorName()
 	{
 		if (getModel().toUpperCase(Locale.UK).contains(getVendor().toUpperCase(Locale.UK)))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasExternalIp()
+	{
+		if(getExternalIp() != null && !getExternalIp().isEmpty())
 		{
 			return true;
 		}

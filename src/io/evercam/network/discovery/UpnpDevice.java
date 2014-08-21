@@ -1,4 +1,4 @@
-package io.evercam.network.upnp;
+package io.evercam.network.discovery;
 
 import net.sbbi.upnp.devices.UPNPRootDevice;
 
