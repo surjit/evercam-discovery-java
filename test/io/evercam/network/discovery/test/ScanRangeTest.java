@@ -22,11 +22,11 @@ public class ScanRangeTest
 		assertEquals(TEST_RANGE_SIZE, scanRange.size());
 	}
 
-	@Test
-	public void testSetRangeByInterface() throws Exception
-	{
-		NetworkInterface networkInterface = NetworkInfo.getNetworkInterfaceByIp(TEST_IP);
-		ScanRange scanRange = new ScanRange(networkInterface);
-		assertEquals(TEST_RANGE_SIZE, scanRange.size());
-	}
+//	@Test
+//	public void testSetRangeByInterface() throws Exception
+//	{
+//		NetworkInterface networkInterface = NetworkInfo.getNetworkInterfaceByIp(TEST_IP);
+//		ScanRange scanRange = new ScanRange(networkInterface);
+//		assertEquals(TEST_RANGE_SIZE, scanRange.size());
+//	}
 }

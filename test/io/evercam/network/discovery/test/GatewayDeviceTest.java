@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class GatewayDeviceTest
 {
-	private final String TEST_ROUTER_IP = "192.168.1.1";
+	private final String TEST_ROUTER_IP = "172.16.0.1";
 	@Test
 	public void test() throws Exception
 	{

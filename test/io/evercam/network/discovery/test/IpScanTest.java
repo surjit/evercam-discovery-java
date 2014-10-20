@@ -13,8 +13,12 @@ import org.junit.Test;
 
 public class IpScanTest
 {
-	private final String TEST_ACTIVE_IP = "192.168.1.1";
-	private String TEST_IP = "192.168.1.122";
+//	private final String TEST_ACTIVE_IP = "192.168.1.1";
+//	private String TEST_IP = "192.168.1.122";
+	
+	private final String TEST_ACTIVE_IP = "172.16.0.1";
+	private String TEST_IP = "172.16.0.136";
+	private final String TEST_NET_MASK = "255.255.255.0";
 	ArrayList<String> ipList = new ArrayList<String>();
 
 	@Test
@@ -41,10 +45,12 @@ public class IpScanTest
 			public void onActiveIp(String ip)
 			{
 				ipList.add(ip);
-
+				System.out.println("IP added :" + ip);
 			}
 		});
-		ipScan.scanAll(new ScanRange(NetworkInfo.getNetworkInterfaceByIp(TEST_IP)));
+		//ipScan.scanAll(new ScanRange(NetworkInfo.getNetworkInterfaceByIp(TEST_IP)));
+		ipScan.scanAll(new ScanRange(TEST_IP, TEST_NET_MASK));
+		System.out.println(ipList.size());
 		assertTrue(ipList.size() > 5);
 		ipList.clear();
 	}

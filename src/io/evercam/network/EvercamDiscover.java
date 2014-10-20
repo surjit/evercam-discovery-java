@@ -50,13 +50,29 @@ public class EvercamDiscover
 		ipScan.scanAll(scanRange);
 
 		// Start UPnP discovery
-		UpnpDiscovery upnpDiscovery = new UpnpDiscovery(null);
-		upnpDiscovery.discoverAll();
-		ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
+		ArrayList<UpnpDevice> deviceList = new ArrayList<UpnpDevice>();
+		try
+		{
+			UpnpDiscovery upnpDiscovery = new UpnpDiscovery(null);
+			upnpDiscovery.discoverAll();
+			deviceList = upnpDiscovery.getUpnpDevices();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getStackTrace());
+		}
 
 		// Start UPnP router discovery
-		GatewayDevice gatewayDevice = new GatewayDevice(routerIp);
-		ArrayList<ActionResponse> mapEntries = gatewayDevice.getNatTableArray();
+		ArrayList<ActionResponse> mapEntries = new ArrayList<ActionResponse>();
+		try
+		{
+			GatewayDevice gatewayDevice = new GatewayDevice(routerIp);
+			mapEntries = gatewayDevice.getNatTableArray();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		// For each active IP, request for MAC address and vendor
 		for (String ip : activeIpList)
@@ -103,23 +119,33 @@ public class EvercamDiscover
 	private DiscoveredCamera mergeUpnpDeviceToCamera(DiscoveredCamera camera,
 			ArrayList<UpnpDevice> upnpDeviceList)
 	{
-		for (UpnpDevice upnpDevice : upnpDeviceList)
+		try
 		{
-			// If IP address matches
-			String ipFromUpnp = upnpDevice.getIp();
-			if (ipFromUpnp != null && !ipFromUpnp.isEmpty())
+		if(upnpDeviceList.size() > 0)
+		{
+			for (UpnpDevice upnpDevice : upnpDeviceList)
 			{
-				if (camera.getIP().equals(ipFromUpnp))
+				// If IP address matches
+				String ipFromUpnp = upnpDevice.getIp();
+				if (ipFromUpnp != null && !ipFromUpnp.isEmpty())
 				{
-					int port = upnpDevice.getPort();
-					String model = upnpDevice.getModel();
-					if (port != 0)
+					if (camera.getIP().equals(ipFromUpnp))
 					{
-						camera.setHttp(port);
+						int port = upnpDevice.getPort();
+						String model = upnpDevice.getModel();
+						if (port != 0)
+						{
+							camera.setHttp(port);
+						}
+						camera.setModel(model);
 					}
-					camera.setModel(model);
 				}
 			}
+		}
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getStackTrace().toString());
 		}
 		return camera;
 	}
@@ -127,6 +153,8 @@ public class EvercamDiscover
 	private DiscoveredCamera addPortsInfoToCamera(DiscoveredCamera camera,
 			ArrayList<Integer> activePortList)
 	{
+		if(activePortList.size() > 0)
+		{
 		for (Integer port : activePortList)
 		{
 			String port_s = String.valueOf(port);
@@ -154,11 +182,14 @@ public class EvercamDiscover
 				}
 			}
 		}
+		}
 		return camera;
 	}
 	
 	private DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera, ArrayList<ActionResponse> mapEntries)
 	{
+		if(mapEntries.size() > 0)
+		{
 		for(ActionResponse mapEntry : mapEntries)
 		{
 			String natIp = mapEntry
@@ -179,6 +210,7 @@ public class EvercamDiscover
 					camera.setExtrtsp(natExternalPort);
 				}
 			}
+		}
 		}
 		return camera;
 	}

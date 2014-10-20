@@ -143,24 +143,25 @@ public class NetworkInfo
 		return null;
 	}
 
-	/**
-	 * Return the network prefix length. Return 0 if no CIDR detected.
-	 */
-	public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
-	{
-		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-		{
-			InetAddress inetAddress = address.getAddress();
-			if (!inetAddress.isLoopbackAddress())
-			{
-				if (inetAddress instanceof Inet4Address)
-				{
-					return address.getNetworkPrefixLength();
-				}
-			}
-		}
-		return 0;
-	}
+//	/**
+//	 * Return the network prefix length. Return 0 if no CIDR detected.
+//	 * FIXME: This method may return -1, which means it may not be the right approach
+//	 */
+//	public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
+//	{
+//		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+//		{
+//			InetAddress inetAddress = address.getAddress();
+//			if (!inetAddress.isLoopbackAddress())
+//			{
+//				if (inetAddress instanceof Inet4Address)
+//				{
+//					return address.getNetworkPrefixLength();
+//				}
+//			}
+//		}
+//		return 0;
+//	}
 
 	/**
 	 * Return the valid ipv4 address for the given network interface. Return
