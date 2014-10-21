@@ -4,7 +4,6 @@ public class Constants
 {
 	private Constants()
 	{
-		
 	}
 	
 	// device types

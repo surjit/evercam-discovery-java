@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import net.sbbi.upnp.Discovery;
 import net.sbbi.upnp.devices.UPNPRootDevice;
 
+/**
+ * Discover UPnP root device within the network
+ */
 public class UpnpDiscovery
 {
 	private UpnpResult upnpResult;
@@ -25,6 +28,9 @@ public class UpnpDiscovery
 		this.upnpResult = upnpResult;
 	}
 
+	/**
+	 * Discover all UPnP device with device type - upnp:rootdevice
+	 */
 	public void discoverAll()
 	{
 		upnpDeviceList = new ArrayList<UpnpDevice>();
@@ -49,9 +55,6 @@ public class UpnpDiscovery
 					}
 				}
 			}
-			else
-			{
-			}
 		}
 		catch (IOException e)
 		{
@@ -59,6 +62,10 @@ public class UpnpDiscovery
 		}
 	}
 
+	/**
+	 * @return a list of discovered UPnP device
+	 * @throws EvercamException if the discovery not started yet
+	 */
 	public ArrayList<UpnpDevice> getUpnpDevices() throws EvercamException
 	{
 		if (upnpDeviceList != null)
@@ -71,6 +78,10 @@ public class UpnpDiscovery
 		}
 	}
 
+	/**
+	 * @param upnpDevice discovered UPNPRootDevice
+	 * @return the IP address of the UPnP device
+	 */
 	public static String getIPFromUpnp(UPNPRootDevice upnpDevice)
 	{
 		if (upnpDevice.getPresentationURL() != null)
@@ -83,6 +94,10 @@ public class UpnpDiscovery
 		}
 	}
 
+	/**
+	 * @param upnpDevice discovered UPNPRootDevice
+	 * @return the HTTP port of the device, if not exists, return 0
+	 */
 	public static int getPortFromUpnp(UPNPRootDevice upnpDevice)
 	{
 		if (upnpDevice.getPresentationURL() != null)
@@ -93,6 +108,10 @@ public class UpnpDiscovery
 		return 0;
 	}
 
+	/**
+	 * @param upnpDevice discovered UPNPRootDevice
+	 * @return the model of the UPnP device
+	 */
 	public static String getModelFromUpnp(UPNPRootDevice upnpDevice)
 	{
 		String modelName = upnpDevice.getModelName();

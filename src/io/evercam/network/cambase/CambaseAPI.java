@@ -2,9 +2,19 @@ package io.evercam.network.cambase;
 
 import java.util.ArrayList;
 
-
+/**
+ * The helper class for Cambase API
+ * Currently only be used to retrieve camera thumbnail
+ */
 public class CambaseAPI
 {
+	/**
+	 * By default, Cambase returns the thumbnail in original size
+	 * This method will replace it with the small size.
+	 * 
+	 * @param url the camera image URL that returned from Cambase
+	 * @return the camera small size image URL
+	 */
 	public static String getSmallImageUrl(String url)
 	{
 		String original = "/original/";
@@ -12,6 +22,15 @@ public class CambaseAPI
 		return url.replace(original, small);
 	}
 	
+	/**
+	 * Retrieve the small size thumbnail URL by specify camera vendor and model
+	 * 
+	 * @param vendorId camera vendor ID for Cambase
+	 * @param modelId camera model ID for Cambase
+	 * @return the small size thumbnail URL, if no image associated with the specified
+	 * model, return logo URL for the specified vendor
+	 * @throws CambaseException if error occurred with Cambase
+	 */
 	public static String getThumbnailUrlFor(String vendorId, String modelId) throws CambaseException
 	{
 		String thumbnailUrl = "";
