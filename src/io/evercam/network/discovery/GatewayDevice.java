@@ -56,6 +56,16 @@ public class GatewayDevice
 			e.printStackTrace();
 		}
 	}
+	
+	public InternetGatewayDevice getIGD()
+	{
+		return IGD;
+	}
+	
+	public int getTableSize()
+	{
+		return tableSize;
+	}
 
 	// Is UPnP enabled on router?
 	public boolean isUPnPAvaliable()
@@ -71,16 +81,16 @@ public class GatewayDevice
 	}
 
 	// get NAT mapped entity for specific IP
-	public ArrayList<ActionResponse> getMatchedEntries(String ip)
+	public ArrayList<NatMapEntry> getMatchedEntries(String ip)
 	{
-		ArrayList<ActionResponse> matchedEntrys = new ArrayList<ActionResponse>();
+		ArrayList<NatMapEntry> matchedEntrys = new ArrayList<NatMapEntry>();
 		for (int sizeIndex = 0; sizeIndex < tableSize; sizeIndex++)
 		{
 			try
 			{
-				ActionResponse mapEntry = IGD.getGenericPortMappingEntry(sizeIndex);
-				String natIP = mapEntry
-						.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_CLIENT);
+				ActionResponse actionResponse = IGD.getGenericPortMappingEntry(sizeIndex);
+				NatMapEntry mapEntry = new NatMapEntry(actionResponse);
+				String natIP = mapEntry.getIpAddress();
 				if (natIP.equals(ip))
 				{
 					matchedEntrys.add(mapEntry);
@@ -107,17 +117,17 @@ public class GatewayDevice
 	 * Return UPnP table as list Return an empty list if the device is not
 	 * router or not UPnP enabled.
 	 */
-	public ArrayList<ActionResponse> getNatTableArray()
+	public ArrayList<NatMapEntry> getNatTableArray()
 	{
-		ArrayList<ActionResponse> mapEntries = new ArrayList<ActionResponse>();
+		ArrayList<NatMapEntry> mapEntries = new ArrayList<NatMapEntry>();
 		if (isRouter() && isUPnPAvaliable())
 		{
 			try
 			{
 				for (int sizeIndex = 0; sizeIndex < tableSize; sizeIndex++)
 				{
-					ActionResponse mapEntry = IGD.getGenericPortMappingEntry(sizeIndex);
-					mapEntries.add(mapEntry);
+					ActionResponse actionResponse = IGD.getGenericPortMappingEntry(sizeIndex);
+					mapEntries.add(new NatMapEntry(actionResponse));
 				}
 			}
 			catch (IOException e)

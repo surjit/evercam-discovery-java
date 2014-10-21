@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import io.evercam.network.discovery.GatewayDevice;
+import io.evercam.network.discovery.NatMapEntry;
 import io.evercam.network.discovery.UpnpDevice;
 import io.evercam.network.discovery.UpnpDiscovery;
-
 import net.sbbi.upnp.messages.ActionResponse;
 
 import org.junit.Test;
@@ -22,17 +22,14 @@ public class GatewayDeviceTest
 		assertTrue(gatewayDevice.isRouter());
 		assertTrue(gatewayDevice.isUPnPAvaliable());
 		
-		ArrayList<ActionResponse> mapEntries = gatewayDevice.getNatTableArray();
+		ArrayList<NatMapEntry> mapEntries = gatewayDevice.getNatTableArray();
 		if(mapEntries.size()!=0)
 		{
-			for (ActionResponse mapEntry: mapEntries)
+			for (NatMapEntry mapEntry: mapEntries)
 			{
-				String natIP = mapEntry
-						.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_CLIENT);
-				int natInternalPort = Integer.parseInt(mapEntry
-						.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_INTERNAL_PORT));
-				int natExternalPort = Integer.parseInt(mapEntry
-						.getOutActionArgumentValue(UpnpDiscovery.UPNP_KEY_EXTERNAL_PORT));
+				String natIP = mapEntry.getIpAddress();
+				int natInternalPort = mapEntry.getInternalPort();
+				int natExternalPort = mapEntry.getExternalPort();
 				System.out.println(natIP + " " + natInternalPort + " " + natExternalPort);
 			}
 		}
