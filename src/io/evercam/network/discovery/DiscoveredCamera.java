@@ -41,6 +41,7 @@ public class DiscoveredCamera implements Serializable
 	private int portForwarded = 0; // 1:yes 0:no
 	private int evercamConnected = 0; // 1:yes 0:no
 	private int active = 0; // 1:yes 0:no
+	private String thumbnail = "";
 
 	public DiscoveredCamera(String ip)
 	{
@@ -347,6 +348,16 @@ public class DiscoveredCamera implements Serializable
 	public int getEvercamConnected()
 	{
 		return evercamConnected;
+	}
+
+	public String getThumbnail() 
+	{
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) 
+	{
+		this.thumbnail = thumbnail;
 	}
 
 	public void setEvercamConnected(int evercamConnected)
