@@ -1,4 +1,4 @@
-//package io.evercam.network;
+package io.evercam.network;
 //
 //import java.util.ArrayList;
 //import java.util.Locale;
@@ -18,8 +18,8 @@
 //import io.evercam.network.discovery.UpnpDevice;
 //import io.evercam.network.discovery.UpnpDiscovery;
 //
-//public class EvercamDiscover
-//{
+public class EvercamDiscover
+{
 //	private ArrayList<String> activeIpList = new ArrayList<String>();
 //
 //	/**
@@ -234,4 +234,4 @@
 //			return null;
 //		}
 //	}
-//}
+}

@@ -32,4 +32,14 @@ public class NatMapEntry
 	{
 		return Integer.parseInt(actionResponse.getOutActionArgumentValue(KEY_EXTERNAL_PORT));
 	}
+	
+	public String getDescription()
+	{
+		return actionResponse.getOutActionArgumentValue(KEY_DESCRIPTION);
+	}
+	
+	public String getProtocal()
+	{
+		return actionResponse.getOutActionArgumentValue(KEY_PROTOCOL);
+	}
 }

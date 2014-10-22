@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 import io.evercam.network.discovery.GatewayDevice;
 import io.evercam.network.discovery.NatMapEntry;
-import io.evercam.network.discovery.UpnpDevice;
-import io.evercam.network.discovery.UpnpDiscovery;
-import net.sbbi.upnp.messages.ActionResponse;
 
 import org.junit.Test;
 
