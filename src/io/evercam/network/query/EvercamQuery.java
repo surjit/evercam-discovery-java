@@ -88,4 +88,6 @@ public class EvercamQuery
 		
 		return defaults.getH264URL();
 	}
+	
+	
 }

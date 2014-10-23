@@ -22,7 +22,7 @@ public class IpScan
 
 	public void scanAll(ScanRange scanRange)
 	{
-		long ip = scanRange.getScanIp();
+		long ip = scanRange.getRouterIp();
 		long start = scanRange.getScanStart();
 		long end = scanRange.getScanEnd();
 		pool = Executors.newFixedThreadPool(DEFAULT_FIXED_POOL);

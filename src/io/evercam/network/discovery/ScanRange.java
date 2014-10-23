@@ -1,16 +1,16 @@
 package io.evercam.network.discovery;
 
-import java.net.NetworkInterface;
-
 public class ScanRange
 {
-	private long scanIp;
+	private long routerIp;
+	private String routerIpString;
 	private long scanStart;
 	private long scanEnd;
 
-	public ScanRange(String ip, String subnetMask) throws Exception
+	public ScanRange(String routerIp, String subnetMask) throws Exception
 	{
-		scanIp = IpTranslator.getUnsignedLongFromIp(ip);
+		this.routerIp = IpTranslator.getUnsignedLongFromIp(routerIp);
+		this.routerIpString = routerIp;
 
 		int cidr = IpTranslator.maskIpToCidr(subnetMask);
 		setUpStartAndEnd(cidr);
@@ -30,12 +30,12 @@ public class ScanRange
 		int shift = (32 - cidr);
 		if (cidr < 31)
 		{
-			scanStart = (scanIp >> shift << shift) + 1;
+			scanStart = (routerIp >> shift << shift) + 1;
 			scanEnd = (scanStart | ((1 << shift) - 1)) - 1;
 		}
 		else
 		{
-			scanStart = (scanIp >> shift << shift);
+			scanStart = (routerIp >> shift << shift);
 			scanEnd = (scanStart | ((1 << shift) - 1));
 		}
 	}
@@ -45,9 +45,14 @@ public class ScanRange
 		return (int) (scanEnd - scanStart + 1);
 	}
 
-	protected long getScanIp()
+	protected long getRouterIp()
 	{
-		return scanIp;
+		return routerIp;
+	}
+	
+	public String getRouterIpString()
+	{
+		return routerIpString;
 	}
 
 	protected long getScanStart()
@@ -62,7 +67,7 @@ public class ScanRange
 
 	protected void setScanIp(long scanIp)
 	{
-		this.scanIp = scanIp;
+		this.routerIp = scanIp;
 	}
 
 	protected void setScanStart(long scanStart)

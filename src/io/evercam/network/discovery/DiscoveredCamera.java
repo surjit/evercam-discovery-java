@@ -98,35 +98,35 @@ public class DiscoveredCamera implements Serializable
 		this.model = model;
 	}
 
-	public int getUpnp()
-	{
-		return upnp;
-	}
-
-	public void setUpnp(int upnp)
-	{
-		this.upnp = upnp;
-	}
-
-	public int getBonjour()
-	{
-		return bonjour;
-	}
-
-	public void setBonjour(int bonjour)
-	{
-		this.bonjour = bonjour;
-	}
-
-	public int getOnvif()
-	{
-		return onvif;
-	}
-
-	public void setOnvif(int onvif)
-	{
-		this.onvif = onvif;
-	}
+//	public int getUpnp()
+//	{
+//		return upnp;
+//	}
+//
+//	public void setUpnp(int upnp)
+//	{
+//		this.upnp = upnp;
+//	}
+//
+//	public int getBonjour()
+//	{
+//		return bonjour;
+//	}
+//
+//	public void setBonjour(int bonjour)
+//	{
+//		this.bonjour = bonjour;
+//	}
+//
+//	public int getOnvif()
+//	{
+//		return onvif;
+//	}
+//
+//	public void setOnvif(int onvif)
+//	{
+//		this.onvif = onvif;
+//	}
 
 	public int getHttp()
 	{
@@ -148,25 +148,25 @@ public class DiscoveredCamera implements Serializable
 		this.rtsp = rtsp;
 	}
 
-	public int getFtp()
-	{
-		return ftp;
-	}
-
-	public void setFtp(int ftp)
-	{
-		this.ftp = ftp;
-	}
-
-	public int getSsh()
-	{
-		return ssh;
-	}
-
-	public void setSsh(int ssh)
-	{
-		this.ssh = ssh;
-	}
+//	public int getFtp()
+//	{
+//		return ftp;
+//	}
+//
+//	public void setFtp(int ftp)
+//	{
+//		this.ftp = ftp;
+//	}
+//
+//	public int getSsh()
+//	{
+//		return ssh;
+//	}
+//
+//	public void setSsh(int ssh)
+//	{
+//		this.ssh = ssh;
+//	}
 
 	public int getExthttp()
 	{
@@ -188,80 +188,80 @@ public class DiscoveredCamera implements Serializable
 		this.extrtsp = extrtsp;
 	}
 
-	public int getExtftp()
-	{
-		return extftp;
-	}
+//	public int getExtftp()
+//	{
+//		return extftp;
+//	}
+//
+//	public void setExtftp(int extftp)
+//	{
+//		this.extftp = extftp;
+//	}
+//
+//	public int getExtssh()
+//	{
+//		return extssh;
+//	}
+//
+//	public void setExtssh(int extssh)
+//	{
+//		this.extssh = extssh;
+//	}
+//
+//	public void setFlag(int flag)
+//	{
+//		this.flag = flag;
+//	}
+//
+//	public int getFlag()
+//	{
+//		return flag;
+//	}
 
-	public void setExtftp(int extftp)
-	{
-		this.extftp = extftp;
-	}
-
-	public int getExtssh()
-	{
-		return extssh;
-	}
-
-	public void setExtssh(int extssh)
-	{
-		this.extssh = extssh;
-	}
-
-	public void setFlag(int flag)
-	{
-		this.flag = flag;
-	}
-
-	public int getFlag()
-	{
-		return flag;
-	}
-
-	public String getSsid()
-	{
-		return ssid;
-	}
-
-	public void setSsid(String ssid)
-	{
-		this.ssid = ssid;
-	}
-
-	public String getFirstSeen()
-	{
-		return firstSeen;
-	}
-
-	public void setFirstSeen(String firstSeen)
-	{
-		this.firstSeen = firstSeen;
-	}
-
-	public String getLastSeen()
-	{
-		return lastSeen;
-	}
-
-	public void setLastSeen(String lastSeen)
-	{
-		this.lastSeen = lastSeen;
-	}
-
-	public int getActive()
-	{
-		return active;
-	}
-
-	public void setActive(int active)
-	{
-		this.active = active;
-	}
-
-	public boolean isActive()
-	{
-		return getActive() == 1;
-	}
+//	public String getSsid()
+//	{
+//		return ssid;
+//	}
+//
+//	public void setSsid(String ssid)
+//	{
+//		this.ssid = ssid;
+//	}
+//
+//	public String getFirstSeen()
+//	{
+//		return firstSeen;
+//	}
+//
+//	public void setFirstSeen(String firstSeen)
+//	{
+//		this.firstSeen = firstSeen;
+//	}
+//
+//	public String getLastSeen()
+//	{
+//		return lastSeen;
+//	}
+//
+//	public void setLastSeen(String lastSeen)
+//	{
+//		this.lastSeen = lastSeen;
+//	}
+//
+//	public int getActive()
+//	{
+//		return active;
+//	}
+//
+//	public void setActive(int active)
+//	{
+//		this.active = active;
+//	}
+//
+//	public boolean isActive()
+//	{
+//		return getActive() == 1;
+//	}
 
 	@Override
 	public String toString()
@@ -335,20 +335,20 @@ public class DiscoveredCamera implements Serializable
 		this.h264 = h264;
 	}
 
-	public int getPortForwarded()
-	{
-		return portForwarded;
-	}
-
-	public void setPortForwarded(int portForwarded)
-	{
-		this.portForwarded = portForwarded;
-	}
-
-	public int getEvercamConnected()
-	{
-		return evercamConnected;
-	}
+//	public int getPortForwarded()
+//	{
+//		return portForwarded;
+//	}
+//
+//	public void setPortForwarded(int portForwarded)
+//	{
+//		this.portForwarded = portForwarded;
+//	}
+//
+//	public int getEvercamConnected()
+//	{
+//		return evercamConnected;
+//	}
 
 	public String getThumbnail() 
 	{
@@ -360,34 +360,10 @@ public class DiscoveredCamera implements Serializable
 		this.thumbnail = thumbnail;
 	}
 
-	public void setEvercamConnected(int evercamConnected)
-	{
-		this.evercamConnected = evercamConnected;
-	}
-
-	public boolean hasInternalPorts()
-	{
-		if (getHttp() != 0 || getRtsp() != 0 || getFtp() != 0 || getSsh() != 0 || getHttps() != 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public boolean isDemoCamera()
-	{
-		if (this.getSsid().equals("sample"))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+//	public void setEvercamConnected(int evercamConnected)
+//	{
+//		this.evercamConnected = evercamConnected;
+//	}
 
 	public boolean hasHTTP()
 	{
@@ -415,24 +391,24 @@ public class DiscoveredCamera implements Serializable
 		}
 		return false;
 	}
-
-	public boolean hasSSH()
-	{
-		if (getSsh() != 0)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public boolean hasFTP()
-	{
-		if (getFtp() != 0)
-		{
-			return true;
-		}
-		return false;
-	}
+//
+//	public boolean hasSSH()
+//	{
+//		if (getSsh() != 0)
+//		{
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	public boolean hasFTP()
+//	{
+//		if (getFtp() != 0)
+//		{
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public boolean hasExternalHttp()
 	{
@@ -460,24 +436,24 @@ public class DiscoveredCamera implements Serializable
 		}
 		return false;
 	}
-
-	public boolean hasExternalFtp()
-	{
-		if (getExtftp() != 0)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public boolean hasExternalSsh()
-	{
-		if (getExtssh() != 0)
-		{
-			return true;
-		}
-		return false;
-	}
+//
+//	public boolean hasExternalFtp()
+//	{
+//		if (getExtftp() != 0)
+//		{
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	public boolean hasExternalSsh()
+//	{
+//		if (getExtssh() != 0)
+//		{
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public boolean hasModel()
 	{
@@ -500,15 +476,6 @@ public class DiscoveredCamera implements Serializable
 	public boolean hasVendor()
 	{
 		if (getVendor() != null && !getVendor().equals(""))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public boolean isEvercam()
-	{
-		if (getEvercamConnected() == 1)
 		{
 			return true;
 		}

@@ -41,6 +41,7 @@ public class CambaseAPI
 				modelId = modelId.replace(vendorId + " ", "");
 			}
 			CambaseModel model = new CambaseModel(modelId);
+			
 			ArrayList<String> thumnailUrls = model.getThumnailUrls();
 			if (thumnailUrls.size() > 0)
 			{
