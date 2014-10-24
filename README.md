@@ -32,6 +32,23 @@ IpScan ipScan = new IpScan(new ScanResult(){
 });
 ipScan.scanAll(scanRange);
 
+//Check a MAC address is camera vendor or not, 
+Vendor vendor = EvercamQuery.getCameraVendorByMac("11:22:33");
+if(vendor != null)
+{
+	//is a camera vendor
+}
+
+//Scan active ports by IP adress
+PortScan portScan = new PortScan(new PortScanResult(){
+	@Override
+	public void onPortActive(int port, int type)
+	{
+		//Do what you want to the active port
+	}
+});
+portScan.start("192.168.1.10");
+
 //Discover UPnP devices in local network with device callback
 UpnpDiscovery upnpDiscovery = new UpnpDiscovery(new UpnpResult(){
 	@Override
