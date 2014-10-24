@@ -46,6 +46,9 @@ ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
 GatewayDevice gatewayDevice = new GatewayDevice("192.168.1.1");
 ArrayList<NatMapEntry> mapEntries = gatewayDevice.getNatTableArray();
 
-//
+//Camera manufacturer defaults
+Defaults defaults = new Vendor("hikvision").getDefaultModel().getDefaults();
 
+//Camera thumbnail URL
+String thumbnailUrl = CambaseAPI.getThumbnailUrlFor("hikvision", "ds-2cd7164-e")
 ```
