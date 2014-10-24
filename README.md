@@ -3,7 +3,9 @@
 A network scanning library in Java, includes IP scan, port scan, UPnP device discovery and additional camera discovery for thumbnail and defaults(username, password, URLs).
 
 ##Usage
+Directly include the [JAR file](https://github.com/evercam/networkscan.java/blob/master/evercam-networkscan.jar) in the classpath, Java doc will be associated with your project as well.
 
+##Examples
 Scan local network, find camera devices with options of including camera thumbnail and defaults or not, and return all discovered camera details(IP address, internal & external HTTP & RTSP ports, MAC address, vendor, model, thumbmnail, default username, password and URLs), currently only work for Android.
 ```Java
 import io.evercam.network.*;
