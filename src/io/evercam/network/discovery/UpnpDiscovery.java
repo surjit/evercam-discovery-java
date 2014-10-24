@@ -39,7 +39,7 @@ public class UpnpDiscovery
 					{
 						if (upnpResult != null)
 						{
-							upnpResult.onUpnpDeviceFound(devices[i]);
+							upnpResult.onUpnpDeviceFound(new UpnpDevice(devices[i]));
 						}
 						else
 						{

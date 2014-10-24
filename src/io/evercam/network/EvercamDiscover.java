@@ -2,6 +2,8 @@ package io.evercam.network;
 
 import java.util.ArrayList;
 
+import io.evercam.Auth;
+import io.evercam.Defaults;
 import io.evercam.Vendor;
 import io.evercam.network.Constants;
 import io.evercam.network.cambase.CambaseAPI;
@@ -17,7 +19,7 @@ import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 import io.evercam.network.discovery.UpnpDiscovery;
 import io.evercam.network.query.EvercamQuery;
-//
+
 public class EvercamDiscover
 {
 	private ArrayList<String> activeIpList = new ArrayList<String>();
@@ -28,7 +30,29 @@ public class EvercamDiscover
 	private boolean natDone = false;
 	private int countDone = 0;
 	private String externalIp = "";
+	private boolean withThumbnail = false;
+	private boolean withDefaults = false;
 
+	/**
+	 * Include camera thumbnail in the scanning result or not
+	 * @param withThumbnail true if include camera thumbnail
+	 */
+	public EvercamDiscover withThumbnail(boolean withThumbnail)
+	{
+		this.withThumbnail = withThumbnail;
+		return this;
+	}
+	
+	/**
+	 * Include camera defaults(username, password,URL) in the scanning result or not
+	 * @param withThumbnail true if include camera defaults
+	 */
+	public EvercamDiscover withDefaults(boolean withDefaults)
+	{
+		this.withDefaults = withDefaults;
+		return this;
+	}
+	
 	/**
 	 * The wrapped method to scan for cameras in Android.
 	 * 
@@ -260,7 +284,23 @@ public class EvercamDiscover
 							// Add details in discovered NAT table(mainly forwarded ports) 
 							camera = mergeNatTableToCamera(camera, mapEntries);
 							
-							camera.setThumbnail(CambaseAPI.getThumbnailUrlFor(vendorId, camera.getModel()));
+							if(withThumbnail)
+							{
+								camera.setThumbnail(CambaseAPI.getThumbnailUrlFor(vendorId, camera.getModel()));
+							}
+							
+							if(withDefaults)
+							{
+								Defaults defaults = vendor.getDefaultModel().getDefaults();
+								String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
+								String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
+								String jpgUrl = defaults.getJpgURL();
+								String h264Url = defaults.getH264URL();
+								camera.setUsername(username);
+								camera.setPassword(password);
+								camera.setJpg(jpgUrl);
+								camera.setH264(h264Url);
+							}
 							
 							synchronized(cameraList)
 							{
