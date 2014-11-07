@@ -1,6 +1,9 @@
 package io.evercam.network;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import io.evercam.Auth;
 import io.evercam.Defaults;
@@ -22,6 +25,8 @@ import io.evercam.network.query.EvercamQuery;
 
 public class EvercamDiscover
 {
+	public static final int DEFAULT_FIXED_POOL = 40;
+	
 	private ArrayList<String> activeIpList = new ArrayList<String>();
 	private ArrayList<UpnpDevice> deviceList = new ArrayList<UpnpDevice>();//UPnP device list
 	private ArrayList<NatMapEntry> mapEntries = new ArrayList<NatMapEntry>();//NAT table
@@ -32,6 +37,7 @@ public class EvercamDiscover
 	private String externalIp = "";
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
+	public ExecutorService pool;
 
 	/**
 	 * Include camera thumbnail in the scanning result or not
@@ -65,6 +71,7 @@ public class EvercamDiscover
 	 */
 	public ArrayList<DiscoveredCamera> discoverAllAndroid(ScanRange scanRange) throws Exception
 	{
+		pool = Executors.newFixedThreadPool(DEFAULT_FIXED_POOL);
 		// Request for external IP address
 		externalIp = NetworkInfo.getExternalIP();
 		// Scan to get a list of active IP addresses.
@@ -77,11 +84,16 @@ public class EvercamDiscover
 		});
 		ipScan.scanAll(scanRange);
 
-		// Start UPnP discovery
-		new Thread(new UpnpRunnable()).start();
-
-		// Start UPnP router discovery
-		new Thread(new NatRunnable(scanRange.getRouterIpString())).start();
+		if(!pool.isShutdown())
+		{
+			// Start UPnP discovery
+			pool.execute(new UpnpRunnable());
+			// Start UPnP router discovery
+			pool.execute(new NatRunnable(scanRange.getRouterIpString()));
+		}
+		//new Thread(new UpnpRunnable()).start();
+		
+		//new Thread(new NatRunnable(scanRange.getRouterIpString())).start();
 		
 		while(!upnpDone || ! natDone)
 		{
@@ -91,13 +103,32 @@ public class EvercamDiscover
 		// For each active IP, request for MAC address and vendor
 		for (int index = 0; index < activeIpList.size() ; index ++)
 		{
-			new Thread(new BuildCameraRunnable(activeIpList.get(index))).start();
+			if(!pool.isShutdown())
+			{
+				pool.execute(new BuildCameraRunnable(activeIpList.get(index)));
+			}
+		//	new Thread(new BuildCameraRunnable(activeIpList.get(index))).start();
 		}
 
 		while(countDone != activeIpList.size())
 		{
 			Thread.sleep(1000);
 		}
+		pool.shutdown();
+		
+		try
+		{
+			if (!pool.awaitTermination(3600, TimeUnit.SECONDS))
+			{
+				pool.shutdownNow();
+			}
+		}
+		catch (InterruptedException e)
+		{
+			pool.shutdownNow();
+			Thread.currentThread().interrupt();
+		}
+		
 		return cameraList;
 	}
 

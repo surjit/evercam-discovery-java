@@ -11,7 +11,7 @@ public class IpScan
 {
 	private ScanResult scanResult;
 	public static final int DEFAULT_TIME_OUT = 2500;
-	public static final int DEFAULT_FIXED_POOL = 75;
+	public static final int DEFAULT_FIXED_POOL = 40;
 	public ExecutorService pool;
 	private int pt_move = 2; // 1=backward 2=forward
 
