@@ -1,6 +1,6 @@
 package io.evercam.network.cambase;
 
-import org.json.JSONException;
+import io.evercam.relocation.JSONException;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 

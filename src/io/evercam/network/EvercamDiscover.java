@@ -25,7 +25,7 @@ import io.evercam.network.query.EvercamQuery;
 
 public class EvercamDiscover
 {
-	public static final int DEFAULT_FIXED_POOL = 40;
+	public static final int DEFAULT_FIXED_POOL = 20;
 	
 	private ArrayList<String> activeIpList = new ArrayList<String>();
 	private ArrayList<UpnpDevice> deviceList = new ArrayList<UpnpDevice>();//UPnP device list

@@ -1,7 +1,7 @@
 package io.evercam.network.cambase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import io.evercam.relocation.JSONException;
+import io.evercam.relocation.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
