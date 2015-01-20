@@ -1,6 +1,7 @@
 package io.evercam.network.cambase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * The helper class for Cambase API
@@ -36,6 +37,11 @@ public class CambaseAPI
 		String thumbnailUrl = "";
 		if (!modelId.isEmpty())
 		{
+			modelId = modelId.toLowerCase(Locale.UK);
+			if(!vendorId.isEmpty())
+			{
+				vendorId = vendorId.toLowerCase(Locale.UK);
+			}
 			if (modelId.contains(vendorId))
 			{
 				modelId = modelId.replace(vendorId + " ", "");

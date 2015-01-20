@@ -14,7 +14,7 @@ public class CambaseVendotTest
 	@Test
 	public void testGetManufacturerLogo() throws CambaseException
 	{
-		final String TEST_LOGO_URL = "http://s3.amazonaws.com/cambaseio/images/files/000/001/095/original/30fc846844deb1a32c4a2dfdfb43ec48.jpg?1413364450";
+		final String TEST_LOGO_URL = "http://s3.amazonaws.com/cambase/images/files/000/001/918/original/c448d26102feff756f92f373201c4507.jpg?1415767726";
 		CambaseVendor cambaseVendor = new CambaseVendor("hikvision");
 		assertEquals(TEST_LOGO_URL , cambaseVendor.getLogoUrl());
 	}
@@ -25,6 +25,6 @@ public class CambaseVendotTest
 		String TSET_MODEL = "ds-2cd7164-e";
 		CambaseModel model = new CambaseModel(TSET_MODEL);
 		ArrayList<String> urlList = model.getThumnailUrls();
-		assertEquals(3,urlList.size());
+		assertEquals(1,urlList.size());
 	}
 }
