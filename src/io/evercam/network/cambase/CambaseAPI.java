@@ -46,12 +46,19 @@ public class CambaseAPI
 			{
 				modelId = modelId.replace(vendorId + " ", "");
 			}
-			CambaseModel model = new CambaseModel(modelId);
-			
-			ArrayList<String> thumnailUrls = model.getThumnailUrls();
-			if (thumnailUrls.size() > 0)
+			try
 			{
-				thumbnailUrl = getSmallImageUrl(thumnailUrls.get(0));
+				CambaseModel model = new CambaseModel(modelId);
+				
+				ArrayList<String> thumnailUrls = model.getThumnailUrls();
+				if (thumnailUrls.size() > 0)
+				{
+					thumbnailUrl = getSmallImageUrl(thumnailUrls.get(0));
+				}
+			}
+			catch (CambaseException e)
+			{
+				e.printStackTrace();
 			}
 		}
 

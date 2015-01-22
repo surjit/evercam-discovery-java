@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class CambaseVendotTest
+public class CambaseVendorTest
 {
 	@Test
 	public void testGetManufacturerLogo() throws CambaseException

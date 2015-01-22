@@ -16,8 +16,8 @@ public class GatewayDeviceTest
 	public void test() throws Exception
 	{
 		GatewayDevice gatewayDevice = new GatewayDevice(TEST_ROUTER_IP);
-		assertTrue(gatewayDevice.isRouter());
-		assertTrue(gatewayDevice.isUPnPAvaliable());
+		assertFalse(gatewayDevice.isRouter());
+		assertFalse(gatewayDevice.isUPnPAvaliable());
 		
 		ArrayList<NatMapEntry> mapEntries = gatewayDevice.getNatTableArray();
 		if(mapEntries.size()!=0)

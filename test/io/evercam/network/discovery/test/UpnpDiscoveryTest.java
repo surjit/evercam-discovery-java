@@ -26,5 +26,4 @@ public class UpnpDiscoveryTest
 		}
 		assertTrue(deviceList.size() > 0);
 	}
-
 }

@@ -1,6 +1,7 @@
 package io.evercam.network.discovery;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
