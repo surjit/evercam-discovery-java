@@ -49,8 +49,9 @@ public class EvercamQuery
 	public static String getDefaultUsernameByVendor(Vendor vendor) throws EvercamException
 	{
 		Defaults defaults = getDefaultsByVendor(vendor);
+		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
 		
-		return defaults.getAuth(Auth.TYPE_BASIC).getUsername();
+		return auth == null ? "": auth.getUsername();
 	}
 	
 	/**
@@ -61,8 +62,9 @@ public class EvercamQuery
 	public static String getDefaultPasswordByVendor(Vendor vendor) throws EvercamException
 	{
 		Defaults defaults = getDefaultsByVendor(vendor);
+		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
 		
-		return defaults.getAuth(Auth.TYPE_BASIC).getPassword();
+		return auth == null ? "": auth.getPassword();
 	}
 	
 	/**
@@ -88,6 +90,4 @@ public class EvercamQuery
 		
 		return defaults.getH264URL();
 	}
-	
-	
 }
