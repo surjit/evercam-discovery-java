@@ -9,5 +9,8 @@
 	<classpathentry kind="lib" path="lib/evercam-java-1.0-withDependency-ShadedForAndroid.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib-mobile.jar"/>
+	<classpathentry kind="lib" path="lib/onvif-2014-12-15.jar"/>
+	<classpathentry kind="lib" path="lib/simple-xml-2.6.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
