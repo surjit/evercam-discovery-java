@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.xml.soap.SOAPException;
@@ -24,10 +25,11 @@ import de.onvif.soap.OnvifDevice;
 
 public class OnvifDiscovery 
 {
-	private static final int SOCKET_TIMEOUT = 4000;
+	private static final int SOCKET_TIMEOUT = 2000;
 	private static final String PROBE_MESSAGE = "<s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:a=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\"><s:Header><a:Action s:mustUnderstand=\"1\">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe</a:Action><a:MessageID>uuid:21859bf9-6193-4c8a-ad50-d082e6d296ab</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><a:To s:mustUnderstand=\"1\">urn:schemas-xmlsoap-org:ws:2005:04:discovery</a:To></s:Header><s:Body><Probe xmlns=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\"><d:Types xmlns:d=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\" xmlns:dp0=\"http://www.onvif.org/ver10/network/wsdl\">dp0:NetworkVideoTransmitter</d:Types></Probe></s:Body></s:Envelope>";
 	private static final String PROBE_IP = "239.255.255.250";
 	private static final int PROBE_PORT = 3702;
+	private static final String SCOPE_NAME = "onvif://www.onvif.org/name/";
 	
 	public static ArrayList<DiscoveredCamera> probe()
 	{
@@ -61,7 +63,7 @@ public class OnvifDiscovery
 			
 			    String responseMessage = new String(datagramPacketRecieve.getData());
 			
-			    //System.out.println("\nResponse Message:\n" + responseMessage);
+			    System.out.println("\nResponse Message:\n" + responseMessage);
 			    
 			    StringReader stringReader = new StringReader(responseMessage);
 		        InputNode localInputNode = NodeBuilder.read(stringReader);
@@ -135,6 +137,17 @@ public class OnvifDiscovery
 		 try
 		    {
 		        String[] urlArray = probeMatch.XAddrs.split("\\s");
+		        String[] scopeArray = probeMatch.Scopes.split("\\s");
+		        String scopeName = "";
+		        for(String scope : scopeArray)
+		        {
+		        	if(scope.contains(SCOPE_NAME))
+		        	{
+		        		final String URL_SPACE = "%20";
+		        		scopeName = scope.replace(SCOPE_NAME, "").replace(URL_SPACE, " ");
+		        		break;
+		        	}
+		        }
 		
 		        try
 		        {
@@ -146,6 +159,10 @@ public class OnvifDiscovery
 		            	httpPort = 80;
 		            }
 		            discoveredCamera.setHttp(httpPort); 
+		            if(!scopeName.isEmpty())
+		            {
+		            	discoveredCamera.setVendor(scopeName.toLowerCase(Locale.UK));
+		            }
 		            System.out.println(discoveredCamera.toString());
 		        }
 		        catch (MalformedURLException localMalformedURLException)

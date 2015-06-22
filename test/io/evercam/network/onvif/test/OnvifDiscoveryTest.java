@@ -15,6 +15,6 @@ public class OnvifDiscoveryTest
 	public void testOnvifProbe()
 	{
 		ArrayList<DiscoveredCamera> cameraList = OnvifDiscovery.probe();
-		assertEquals(2, cameraList.size());
+		assertEquals(1, cameraList.size());
 	}
 }
