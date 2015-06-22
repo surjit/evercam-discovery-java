@@ -9,7 +9,6 @@ import io.evercam.Auth;
 import io.evercam.Defaults;
 import io.evercam.Vendor;
 import io.evercam.network.Constants;
-import io.evercam.network.cambase.CambaseAPI;
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.GatewayDevice;
 import io.evercam.network.discovery.IpScan;
@@ -317,7 +316,7 @@ public class EvercamDiscover
 							
 							if(withThumbnail)
 							{
-								camera.setThumbnail(CambaseAPI.getThumbnailUrlFor(vendorId, camera.getModel()));
+								camera.setThumbnail(EvercamAPI.getThumbnailUrlFor(vendorId, camera.getModel()));
 							}
 							
 							if(withDefaults)

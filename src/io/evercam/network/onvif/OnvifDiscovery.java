@@ -63,7 +63,7 @@ public class OnvifDiscovery
 			
 			    String responseMessage = new String(datagramPacketRecieve.getData());
 			
-			    System.out.println("\nResponse Message:\n" + responseMessage);
+			    //System.out.println("\nResponse Message:\n" + responseMessage);
 			    
 			    StringReader stringReader = new StringReader(responseMessage);
 		        InputNode localInputNode = NodeBuilder.read(stringReader);
