@@ -14,7 +14,12 @@ public class OnvifDiscoveryTest
 	@Test
 	public void testOnvifProbe()
 	{
-		ArrayList<DiscoveredCamera> cameraList = OnvifDiscovery.probe();
+		ArrayList<DiscoveredCamera> cameraList = new OnvifDiscovery(){
+
+			@Override
+			public void onActiveOnvifDevice(DiscoveredCamera discoveredCamera) {
+				System.out.println("ONVIF camera discovered: " + discoveredCamera.toString());
+			}}.probe();
 		assertEquals(1, cameraList.size());
 	}
 }

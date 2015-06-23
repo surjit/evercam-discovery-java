@@ -23,7 +23,7 @@ import org.simpleframework.xml.stream.NodeBuilder;
 
 import de.onvif.soap.OnvifDevice;
 
-public class OnvifDiscovery 
+public abstract class OnvifDiscovery 
 {
 	private static final int SOCKET_TIMEOUT = 2000;
 	private static final String PROBE_MESSAGE = "<s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:a=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\"><s:Header><a:Action s:mustUnderstand=\"1\">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe</a:Action><a:MessageID>uuid:21859bf9-6193-4c8a-ad50-d082e6d296ab</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><a:To s:mustUnderstand=\"1\">urn:schemas-xmlsoap-org:ws:2005:04:discovery</a:To></s:Header><s:Body><Probe xmlns=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\"><d:Types xmlns:d=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\" xmlns:dp0=\"http://www.onvif.org/ver10/network/wsdl\">dp0:NetworkVideoTransmitter</d:Types></Probe></s:Body></s:Envelope>";
@@ -31,7 +31,12 @@ public class OnvifDiscovery
 	private static final int PROBE_PORT = 3702;
 	private static final String SCOPE_NAME = "onvif://www.onvif.org/name/";
 	
-	public static ArrayList<DiscoveredCamera> probe()
+	public OnvifDiscovery()
+	{
+		
+	}
+	
+	public ArrayList<DiscoveredCamera> probe()
 	{
 		ArrayList<DiscoveredCamera> cameraList = new ArrayList<DiscoveredCamera>();
 		
@@ -83,6 +88,7 @@ public class OnvifDiscovery
                 }
 		        uuidArrayList.add(localProbeMatch.EndpointReference.Address);
 			    DiscoveredCamera discoveredCamera = getCameraFromProbeMatch(localProbeMatch);
+			    onActiveOnvifDevice(discoveredCamera);
 			    cameraList.add(discoveredCamera);
             }
 		   
@@ -163,7 +169,6 @@ public class OnvifDiscovery
 		            {
 		            	discoveredCamera.setVendor(scopeName.toLowerCase(Locale.UK));
 		            }
-		            System.out.println(discoveredCamera.toString());
 		        }
 		        catch (MalformedURLException localMalformedURLException)
 		        {
@@ -177,4 +182,6 @@ public class OnvifDiscovery
 		    }
 		 return discoveredCamera;
 	}
+	
+	public abstract void onActiveOnvifDevice(DiscoveredCamera discoveredCamera);
 }
