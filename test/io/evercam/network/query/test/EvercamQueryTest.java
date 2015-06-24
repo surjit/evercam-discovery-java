@@ -26,4 +26,13 @@ public class EvercamQueryTest
 		assertEquals("Streaming/Channels/1/picture", EvercamQuery.getDefaultJpgUrlByVendor(hikvision));
 		assertEquals("h264/ch1/main/av_stream", EvercamQuery.getDefaultH264UrlByVendor(hikvision));
 	}
+	
+	@Test
+	public void testGetThumbnailUrl() throws EvercamException
+	{
+		final String TEST_LOGO_URL = "http://evercam-public-assets.s3.amazonaws.com/hikvision/logo.jpg";
+		final String TEST_MODEL_URL = "http://evercam-public-assets.s3.amazonaws.com/hikvision/ds-2cd7164-e/thumbnail.jpg";
+		assertEquals(TEST_LOGO_URL, EvercamQuery.getThumbnailUrlFor("hikvision", "wrongModel"));
+		assertEquals(TEST_MODEL_URL, EvercamQuery.getThumbnailUrlFor("hikvision", "ds-2cd7164-e"));
+	}
 }

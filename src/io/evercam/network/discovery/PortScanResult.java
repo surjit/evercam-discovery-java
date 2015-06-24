@@ -2,5 +2,5 @@ package io.evercam.network.discovery;
 
 public interface PortScanResult
 {
-	public void onPortActive(int port, int type);
+	public void onPortActive(int port);
 }

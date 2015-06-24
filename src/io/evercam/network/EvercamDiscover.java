@@ -90,9 +90,6 @@ public class EvercamDiscover
 			// Start UPnP router discovery
 			pool.execute(new NatRunnable(scanRange.getRouterIpString()));
 		}
-		//new Thread(new UpnpRunnable()).start();
-		
-		//new Thread(new NatRunnable(scanRange.getRouterIpString())).start();
 		
 		while(!upnpDone || ! natDone)
 		{
@@ -106,7 +103,6 @@ public class EvercamDiscover
 			{
 				pool.execute(new BuildCameraRunnable(activeIpList.get(index)));
 			}
-		//	new Thread(new BuildCameraRunnable(activeIpList.get(index))).start();
 		}
 
 		while(countDone != activeIpList.size())
@@ -172,30 +168,7 @@ public class EvercamDiscover
 		{
 			for (Integer port : activePortList)
 			{
-				String port_s = String.valueOf(port);
-				if (port == 80)
-				{
-					camera.setHttp(port);
-				}
-				else if (port == 554)
-				{
-					camera.setRtsp(port);
-				}
-				else if (port == 443)
-				{
-					camera.setHttps(port);
-				}
-				else
-				{
-					if (port_s.startsWith("8"))
-					{
-						camera.setHttp(port);
-					}
-					else if (port_s.startsWith("9"))
-					{
-						camera.setRtsp(port);
-					}
-				}
+				PortScan.mergePort(camera, port);
 			}
 		}
 		return camera;
@@ -316,7 +289,7 @@ public class EvercamDiscover
 							
 							if(withThumbnail)
 							{
-								camera.setThumbnail(EvercamAPI.getThumbnailUrlFor(vendorId, camera.getModel()));
+								camera.setThumbnail(EvercamQuery.getThumbnailUrlFor(vendorId, camera.getModel()));
 							}
 							
 							if(withDefaults)
