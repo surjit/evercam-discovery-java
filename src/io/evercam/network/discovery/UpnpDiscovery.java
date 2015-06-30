@@ -110,4 +110,9 @@ public class UpnpDiscovery
 		String modelName = upnpDevice.getModelName();
 		return modelName;
 	}
+	
+	public static String getFriendlyNameFromUpnp(UPNPRootDevice upnpDevice)
+	{
+		return upnpDevice.getFriendlyName();
+	}
 }

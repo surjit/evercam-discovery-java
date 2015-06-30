@@ -80,6 +80,12 @@ public class EvercamDiscover
 			{
 				activeIpList.add(ip);
 			}
+
+			@Override
+			public void onIpScanned(String ip) {
+				// TODO Auto-generated method stub
+			}
+			
 		});
 		ipScan.scanAll(scanRange);
 
@@ -126,8 +132,21 @@ public class EvercamDiscover
 		
 		return cameraList;
 	}
+	
+    public static DiscoveredCamera mergeSingleUpnpDeviceToCamera(UpnpDevice upnpDevice, DiscoveredCamera discoveredCamera)
+    {
+        int port = upnpDevice.getPort();
+        String model = upnpDevice.getModel();
+        if (port > 0)
+        {
+            discoveredCamera.setHttp(port);
+        }
+        discoveredCamera.setName(upnpDevice.getFriendlyName());
+        discoveredCamera.setModel(model);
+        return discoveredCamera;
+    }
 
-	private DiscoveredCamera mergeUpnpDeviceToCamera(DiscoveredCamera camera,
+	public static DiscoveredCamera mergeUpnpDeviceToCamera(DiscoveredCamera camera,
 			ArrayList<UpnpDevice> upnpDeviceList)
 	{
 		try
@@ -142,13 +161,7 @@ public class EvercamDiscover
 					{
 						if (camera.getIP().equals(ipFromUpnp))
 						{
-							int port = upnpDevice.getPort();
-							String model = upnpDevice.getModel();
-							if (port != 0)
-							{
-								camera.setHttp(port);
-							}
-							camera.setModel(model);
+							mergeSingleUpnpDeviceToCamera(upnpDevice, camera);
 						}
 					}
 				}
@@ -174,27 +187,33 @@ public class EvercamDiscover
 		return camera;
 	}
 	
-	private DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera, ArrayList<NatMapEntry> mapEntries)
+	public static DiscoveredCamera mergeNatEntryToCameraIfMatches(DiscoveredCamera camera, NatMapEntry mapEntry)
+	{
+		String natIp = mapEntry.getIpAddress();
+		int natInternalPort = mapEntry.getInternalPort();
+		int natExternalPort = mapEntry.getExternalPort();
+		
+		if(camera.getIP().equals(natIp))
+		{
+			if(camera.getHttp() == natInternalPort)
+			{
+				camera.setExthttp(natExternalPort);
+			}
+			if(camera.getRtsp() == natInternalPort)
+			{
+				camera.setExtrtsp(natExternalPort);
+			}
+		}
+		return camera;
+	}
+	
+	public static DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera, ArrayList<NatMapEntry> mapEntries)
 	{
 		if(mapEntries.size() > 0)
 		{
 			for(NatMapEntry mapEntry : mapEntries)
 			{
-				String natIp = mapEntry.getIpAddress();
-				int natInternalPort = mapEntry.getInternalPort();
-				int natExternalPort = mapEntry.getExternalPort();
-				
-				if(camera.getIP().equals(natIp))
-				{
-					if(camera.getHttp() == natInternalPort)
-					{
-						camera.setExthttp(natExternalPort);
-					}
-					if(camera.getRtsp() == natInternalPort)
-					{
-						camera.setExtrtsp(natExternalPort);
-					}
-				}
+				mergeNatEntryToCameraIfMatches(camera, mapEntry);
 			}
 		}
 		return camera;

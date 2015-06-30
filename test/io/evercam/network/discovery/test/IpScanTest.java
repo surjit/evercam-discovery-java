@@ -29,7 +29,11 @@ public class IpScanTest
 			public void onActiveIp(String ip)
 			{
 				ipList.add(ip);
+			}
 
+			@Override
+			public void onIpScanned(String ip) {
+				// TODO Auto-generated method stub
 			}
 		});
 		ipScan.scanSingleIp(TEST_ACTIVE_IP, 3000);
@@ -46,6 +50,11 @@ public class IpScanTest
 			{
 				ipList.add(ip);
 				System.out.println("IP added :" + ip);
+			}
+
+			@Override
+			public void onIpScanned(String ip) {
+				// TODO Auto-generated method stub
 			}
 		});
 		//ipScan.scanAll(new ScanRange(NetworkInfo.getNetworkInterfaceByIp(TEST_IP)));

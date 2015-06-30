@@ -108,6 +108,7 @@ public class IpScan
 		{
 			e.printStackTrace();
 		}
+		scanResult.onIpScanned(ip);
 	}
 
 	private class SingleRunnable implements Runnable
