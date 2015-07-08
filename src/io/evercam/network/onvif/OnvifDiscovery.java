@@ -95,38 +95,6 @@ public abstract class OnvifDiscovery
 		return cameraList;
 	}
 	
-//	public static boolean connect(String ip, int port, String username, String password)
-//	{
-//		OnvifDevice onvifDevice;
-//		try 
-//		{
-//			onvifDevice= new OnvifDevice(ip + ':' + port, username, password);
-//		}
-//		catch (ConnectException | SOAPException e) 
-//		{
-//			System.out.println("Failed to connect");
-//			return false;
-//		}
-//		System.out.println("Connected");
-//		
-//		List<Profile> profiles = onvifDevice.getDevices().getProfiles();
-//		if( profiles != null)
-//		{
-//			return true;
-////			for (Profile p : profiles) 
-////			{
-////				System.out.println("Snapshot URL \'" + p.getName() + "\': " + onvifDevice.getMedia().getSnapshotUri(p.getToken()));
-////				System.out.println(p.getName() + " " + onvifDevice.getMedia().getRTSPStreamUri(1)) ;
-////				System.out.println("Vendor: " + onvifDevice.getDevices().getDeviceInformation().getManufacturer() + " Model:" + onvifDevice.getDevices().getDeviceInformation().getModel());
-////			}
-//		}
-//		else
-//		{
-//			System.out.println("Profile is null");
-//			return false;
-//		}
-//	}
-	
 	private static String getProbeSoapMessage()
 	{
 		return PROBE_MESSAGE.replaceFirst("<a:MessageID>uuid:.+?</a:MessageID>", "<a:MessageID>uuid:" + UUID.randomUUID().toString() + "</a:MessageID>");
