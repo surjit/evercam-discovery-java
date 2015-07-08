@@ -1,6 +1,6 @@
-#Network Scan
+#Evercam Discovery Library in Java
 
-A network scanning library in Java, includes IP scan, port scan, UPnP device discovery and additional camera discovery for thumbnail and defaults(username, password, URLs).
+A network scanning library in Java for discovering IP camras, includes IP scan, port scan, UPnP device discovery, ONVIF discovery and additional camera discovery for thumbnail and defaults(username, password, URLs).
 
 ##Usage
 Directly include the [JAR file](https://github.com/evercam/networkscan.java/blob/master/evercam-networkscan.jar) in the classpath, Java doc will be associated with your project as well.
@@ -61,13 +61,7 @@ ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
 //Retrieve NAT table
 GatewayDevice gatewayDevice = new GatewayDevice("192.168.1.1");
 ArrayList<NatMapEntry> mapEntries = gatewayDevice.getNatTableArray();
-
-//Camera manufacturer defaults
-Defaults defaults = new Vendor("hikvision").getDefaultModel().getDefaults();
-
-//Camera thumbnail URL
-String thumbnailUrl = CambaseAPI.getThumbnailUrlFor("hikvision", "ds-2cd7164-e")
 ```
 
-
+## Flow Diagram
 ![Disovery Diagram](https://docs.google.com/drawings/d/1v-5S1ieLLwVZEJEthOqupSf4qkV19ocBQD1zPlf154w/pub?w=1814&h=1074)
