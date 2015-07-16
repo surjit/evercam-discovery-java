@@ -41,8 +41,8 @@ public class PortScan
             } catch (Exception e)
             {
                 //Timeout reading from the stream
-                System.out.println("Exception read from stream");
-                e.printStackTrace();
+//                System.out.println("Exception read from stream");
+//                e.printStackTrace();
                 return true;
             }
 
@@ -50,8 +50,8 @@ public class PortScan
         }
         catch (IOException e)
         {
-        	System.out.println("Exception connect socket");
-            e.printStackTrace();
+//        	System.out.println("Exception connect socket");
+//            e.printStackTrace();
             return false;
         }
 	}
@@ -71,7 +71,7 @@ public class PortScan
 			port = ports[i];
 			if (isPortReachable(ip, port))
 			{
-				System.out.print("Active port added: " + ip + ":" + port);
+				//System.out.println("Active port added: " + ip + ":" + port);
 				activePortList.add(port);
 				if (portScanResult != null)
 				{

@@ -20,6 +20,7 @@ import io.evercam.network.discovery.ScanRange;
 import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 import io.evercam.network.discovery.UpnpDiscovery;
+import io.evercam.network.onvif.OnvifDiscovery;
 import io.evercam.network.query.EvercamQuery;
 
 public class EvercamDiscover
@@ -78,6 +79,7 @@ public class EvercamDiscover
 			@Override
 			public void onActiveIp(String ip)
 			{
+				System.out.println("Active IP: " + ip);
 				activeIpList.add(ip);
 			}
 
@@ -91,6 +93,8 @@ public class EvercamDiscover
 
 		if(!pool.isShutdown())
 		{
+			// ONVIF discovery
+			pool.execute(new OnvifRunnable());
 			// Start UPnP discovery
 			pool.execute(new UpnpRunnable());
 			// Start UPnP router discovery
@@ -218,6 +222,21 @@ public class EvercamDiscover
 		}
 		return camera;
 	}
+	
+    private class OnvifRunnable implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            new OnvifDiscovery(){
+                @Override
+                public void onActiveOnvifDevice(DiscoveredCamera discoveredCamera)
+                {
+                    discoveredCamera.setExternalIp(externalIp);
+                }
+            }.probe();
+        }
+    }
 	
 	private class UpnpRunnable implements Runnable
 	{
