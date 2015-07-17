@@ -3,6 +3,7 @@ package io.evercam.network.discovery;
 import io.evercam.network.Constants;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -283,7 +284,7 @@ public class DiscoveredCamera implements Serializable
 				+ ssh + ",extrtsp=" + extrtsp + ",exthttp=" + exthttp + ",flag=" + flag
 				+ ",firstseen=" + firstSeen + ",lastseen=" + lastSeen + ",username=" + username
 				+ ",password=" + password + ",jpg=" + jpg + ",h264=" + h264 + ",ssid=" + ssid
-				+ ",active=" + active + "]";
+				+ ",active=" + active + ",thumbnail=" + thumbnail + "]";
 	}
 
 	public int getHttps()
@@ -552,5 +553,30 @@ public class DiscoveredCamera implements Serializable
         }
         
         return this;
+	}
+	
+	
+	public DiscoveredCamera mergePorts(ArrayList<Integer> portsList)
+	{
+		if(portsList.size() > 0)
+		{
+			for (Integer port : portsList)
+			{
+				if (port == 80)
+				{
+					setHttp(port);
+				}
+				else if (port == 554)
+				{
+					setRtsp(port);
+				}
+				else if (port == 443)
+				{
+					setHttps(port);
+				}
+			}
+		}
+		
+		return this;
 	}
 }

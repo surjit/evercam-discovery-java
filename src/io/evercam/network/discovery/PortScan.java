@@ -92,23 +92,4 @@ public class PortScan
 			throw new EvercamException(EvercamException.MSG_PORT_SCAN_NOT_STARTED);
 		}
 	}
-	
-	public static DiscoveredCamera mergePort(DiscoveredCamera camera, int port)
-	{
-		if (port == 80)
-		{
-			camera.setHttp(port);
-		}
-		else if (port == 554)
-		{
-			camera.setRtsp(port);
-		}
-		else if (port == 443)
-		{
-			camera.setHttps(port);
-		}
-		
-		return camera;
-	}
-
 }
