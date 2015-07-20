@@ -1,7 +1,6 @@
 package io.evercam.network.discovery;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 import net.sbbi.upnp.impls.InternetGatewayDevice;
@@ -57,12 +56,12 @@ public class GatewayDevice
 			e.printStackTrace();
 		}
 	}
-	
+
 	public InternetGatewayDevice getIGD()
 	{
 		return IGD;
 	}
-	
+
 	public int getTableSize()
 	{
 		return tableSize;

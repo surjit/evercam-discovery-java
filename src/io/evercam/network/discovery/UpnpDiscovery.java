@@ -57,7 +57,8 @@ public class UpnpDiscovery
 
 	/**
 	 * @return a list of discovered UPnP device
-	 * @throws EvercamException if the discovery not started yet
+	 * @throws EvercamException
+	 *             if the discovery not started yet
 	 */
 	public ArrayList<UpnpDevice> getUpnpDevices() throws EvercamException
 	{
@@ -72,7 +73,8 @@ public class UpnpDiscovery
 	}
 
 	/**
-	 * @param upnpDevice discovered UPNPRootDevice
+	 * @param upnpDevice
+	 *            discovered UPNPRootDevice
 	 * @return the IP address of the UPnP device
 	 */
 	public static String getIPFromUpnp(UPNPRootDevice upnpDevice)
@@ -88,7 +90,8 @@ public class UpnpDiscovery
 	}
 
 	/**
-	 * @param upnpDevice discovered UPNPRootDevice
+	 * @param upnpDevice
+	 *            discovered UPNPRootDevice
 	 * @return the HTTP port of the device, if not exists, return 0
 	 */
 	public static int getPortFromUpnp(UPNPRootDevice upnpDevice)
@@ -102,7 +105,8 @@ public class UpnpDiscovery
 	}
 
 	/**
-	 * @param upnpDevice discovered UPNPRootDevice
+	 * @param upnpDevice
+	 *            discovered UPNPRootDevice
 	 * @return the model of the UPnP device
 	 */
 	public static String getModelFromUpnp(UPNPRootDevice upnpDevice)
@@ -110,7 +114,7 @@ public class UpnpDiscovery
 		String modelName = upnpDevice.getModelName();
 		return modelName;
 	}
-	
+
 	public static String getFriendlyNameFromUpnp(UPNPRootDevice upnpDevice)
 	{
 		return upnpDevice.getFriendlyName();

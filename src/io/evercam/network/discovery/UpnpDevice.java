@@ -31,7 +31,7 @@ public class UpnpDevice
 	{
 		return port;
 	}
-	
+
 	public String getFriendlyName()
 	{
 		return friendlyName;
@@ -40,6 +40,7 @@ public class UpnpDevice
 	@Override
 	public String toString()
 	{
-		return "UpnpDevice [ip=" + ip + ", model=" + model + ", port=" + port + ", friendlyName=" + friendlyName + "]";
+		return "UpnpDevice [ip=" + ip + ", model=" + model + ", port=" + port + ", friendlyName="
+				+ friendlyName + "]";
 	}
 }

@@ -5,7 +5,7 @@ public class Constants
 	private Constants()
 	{
 	}
-	
+
 	// device types
 	public static final int TYPE_CAMERA = 1;
 	public static final int TYPE_ROUTER = 2;

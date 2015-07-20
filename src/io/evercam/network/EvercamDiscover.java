@@ -1,10 +1,5 @@
 package io.evercam.network;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import io.evercam.Auth;
 import io.evercam.Defaults;
 import io.evercam.EvercamException;
@@ -18,13 +13,21 @@ import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 import io.evercam.network.query.EvercamQuery;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class EvercamDiscover
 {
 	public static final int DEFAULT_FIXED_POOL = 20;
-	
+
 	private ArrayList<String> activeIpList = new ArrayList<String>();
-	private ArrayList<UpnpDevice> deviceList = new ArrayList<UpnpDevice>();//UPnP device list
-	private ArrayList<NatMapEntry> mapEntries = new ArrayList<NatMapEntry>();//NAT table
+	private ArrayList<UpnpDevice> deviceList = new ArrayList<UpnpDevice>();// UPnP
+																			// device
+																			// list
+	private ArrayList<NatMapEntry> mapEntries = new ArrayList<NatMapEntry>();// NAT
+																				// table
 	private ArrayList<DiscoveredCamera> cameraList = new ArrayList<DiscoveredCamera>();
 	private boolean upnpDone = false;
 	private boolean natDone = false;
@@ -33,27 +36,32 @@ public class EvercamDiscover
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	public ExecutorService pool;
-	
+
 	/**
 	 * Include camera thumbnail in the scanning result or not
-	 * @param withThumbnail true if include camera thumbnail
+	 * 
+	 * @param withThumbnail
+	 *            true if include camera thumbnail
 	 */
 	public EvercamDiscover withThumbnail(boolean withThumbnail)
 	{
 		this.withThumbnail = withThumbnail;
 		return this;
 	}
-	
+
 	/**
-	 * Include camera defaults(username, password,URL) in the scanning result or not
-	 * @param withThumbnail true if include camera defaults
+	 * Include camera defaults(username, password,URL) in the scanning result or
+	 * not
+	 * 
+	 * @param withThumbnail
+	 *            true if include camera defaults
 	 */
 	public EvercamDiscover withDefaults(boolean withDefaults)
 	{
 		this.withDefaults = withDefaults;
 		return this;
 	}
-	
+
 	/**
 	 * The wrapped method to scan for cameras in Android.
 	 * 
@@ -70,7 +78,8 @@ public class EvercamDiscover
 		// Request for external IP address
 		externalIp = NetworkInfo.getExternalIP();
 		// Scan to get a list of active IP addresses.
-		IpScan ipScan = new IpScan(new ScanResult(){
+		IpScan ipScan = new IpScan(new ScanResult()
+		{
 			@Override
 			public void onActiveIp(String ip)
 			{
@@ -79,14 +88,15 @@ public class EvercamDiscover
 			}
 
 			@Override
-			public void onIpScanned(String ip) {
+			public void onIpScanned(String ip)
+			{
 				// TODO Auto-generated method stub
 			}
-			
+
 		});
 		ipScan.scanAll(scanRange);
 
-		if(!pool.isShutdown())
+		if (!pool.isShutdown())
 		{
 			// ONVIF discovery
 			pool.execute(onvifRunnable);
@@ -99,7 +109,7 @@ public class EvercamDiscover
 				@Override
 				public void onFinished(ArrayList<NatMapEntry> mapEntries)
 				{
-					if(mapEntries != null)
+					if (mapEntries != null)
 					{
 						EvercamDiscover.this.mapEntries = mapEntries;
 					}
@@ -107,16 +117,16 @@ public class EvercamDiscover
 				}
 			});
 		}
-		
-		while(!upnpDone || ! natDone)
+
+		while (!upnpDone || !natDone)
 		{
 			Thread.sleep(500);
 		}
-		
+
 		// For each active IP, request for MAC address and vendor
-		for (int index = 0; index < activeIpList.size() ; index ++)
+		for (int index = 0; index < activeIpList.size(); index++)
 		{
-			if(!pool.isShutdown())
+			if (!pool.isShutdown())
 			{
 				pool.execute(new IdentifyCameraRunnable(activeIpList.get(index))
 				{
@@ -126,19 +136,22 @@ public class EvercamDiscover
 						try
 						{
 							discoveredCamera.setExternalIp(externalIp);
-							
+
 							// Add details discovered from UPnP to camera object
-							discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera, deviceList);
-		
-							// Add details in discovered NAT table(mainly forwarded ports) 
+							discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera,
+									deviceList);
+
+							// Add details in discovered NAT table(mainly
+							// forwarded ports)
 							discoveredCamera = mergeNatTableToCamera(discoveredCamera, mapEntries);
-							
-							if(withThumbnail)
+
+							if (withThumbnail)
 							{
-								discoveredCamera.setThumbnail(EvercamQuery.getThumbnailUrlFor(discoveredCamera.getVendor(), discoveredCamera.getModel()));
+								discoveredCamera.setThumbnail(EvercamQuery.getThumbnailUrlFor(
+										discoveredCamera.getVendor(), discoveredCamera.getModel()));
 							}
-							
-							if(withDefaults)
+
+							if (withDefaults)
 							{
 								Defaults defaults = vendor.getDefaultModel().getDefaults();
 								String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
@@ -150,8 +163,8 @@ public class EvercamDiscover
 								discoveredCamera.setJpg(jpgUrl);
 								discoveredCamera.setH264(h264Url);
 							}
-							
-							synchronized(cameraList)
+
+							synchronized (cameraList)
 							{
 								cameraList.add(discoveredCamera);
 							}
@@ -165,18 +178,18 @@ public class EvercamDiscover
 					@Override
 					public void onFinished()
 					{
-						countDone ++;
+						countDone++;
 					}
 				});
 			}
 		}
 
-		while(countDone != activeIpList.size())
+		while (countDone != activeIpList.size())
 		{
 			Thread.sleep(1000);
 		}
 		pool.shutdown();
-		
+
 		try
 		{
 			if (!pool.awaitTermination(3600, TimeUnit.SECONDS))
@@ -189,29 +202,30 @@ public class EvercamDiscover
 			pool.shutdownNow();
 			Thread.currentThread().interrupt();
 		}
-		
+
 		return cameraList;
 	}
-	
-    public static DiscoveredCamera mergeSingleUpnpDeviceToCamera(UpnpDevice upnpDevice, DiscoveredCamera discoveredCamera)
-    {
-        int port = upnpDevice.getPort();
-        String model = upnpDevice.getModel();
-        if (port > 0)
-        {
-            discoveredCamera.setHttp(port);
-        }
-        discoveredCamera.setName(upnpDevice.getFriendlyName());
-        discoveredCamera.setModel(model);
-        return discoveredCamera;
-    }
+
+	public static DiscoveredCamera mergeSingleUpnpDeviceToCamera(UpnpDevice upnpDevice,
+			DiscoveredCamera discoveredCamera)
+	{
+		int port = upnpDevice.getPort();
+		String model = upnpDevice.getModel();
+		if (port > 0)
+		{
+			discoveredCamera.setHttp(port);
+		}
+		discoveredCamera.setName(upnpDevice.getFriendlyName());
+		discoveredCamera.setModel(model);
+		return discoveredCamera;
+	}
 
 	public static DiscoveredCamera mergeUpnpDevicesToCamera(DiscoveredCamera camera,
 			ArrayList<UpnpDevice> upnpDeviceList)
 	{
 		try
 		{
-			if(upnpDeviceList.size() > 0)
+			if (upnpDeviceList.size() > 0)
 			{
 				for (UpnpDevice upnpDevice : upnpDeviceList)
 				{
@@ -234,39 +248,41 @@ public class EvercamDiscover
 		}
 		return camera;
 	}
-	
-	public static DiscoveredCamera mergeNatEntryToCameraIfMatches(DiscoveredCamera camera, NatMapEntry mapEntry)
+
+	public static DiscoveredCamera mergeNatEntryToCameraIfMatches(DiscoveredCamera camera,
+			NatMapEntry mapEntry)
 	{
 		String natIp = mapEntry.getIpAddress();
 		int natInternalPort = mapEntry.getInternalPort();
 		int natExternalPort = mapEntry.getExternalPort();
-		
-		if(camera.getIP().equals(natIp))
+
+		if (camera.getIP().equals(natIp))
 		{
-			if(camera.getHttp() == natInternalPort)
+			if (camera.getHttp() == natInternalPort)
 			{
 				camera.setExthttp(natExternalPort);
 			}
-			if(camera.getRtsp() == natInternalPort)
+			if (camera.getRtsp() == natInternalPort)
 			{
 				camera.setExtrtsp(natExternalPort);
 			}
 		}
 		return camera;
 	}
-	
-	public static DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera, ArrayList<NatMapEntry> mapEntries)
+
+	public static DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera,
+			ArrayList<NatMapEntry> mapEntries)
 	{
-		if(mapEntries.size() > 0)
+		if (mapEntries.size() > 0)
 		{
-			for(NatMapEntry mapEntry : mapEntries)
+			for (NatMapEntry mapEntry : mapEntries)
 			{
 				mergeNatEntryToCameraIfMatches(camera, mapEntry);
 			}
 		}
 		return camera;
 	}
-	
+
 	private OnvifRunnable onvifRunnable = new OnvifRunnable()
 	{
 		@Override
@@ -281,14 +297,14 @@ public class EvercamDiscover
 			discoveredCamera.setExternalIp(externalIp);
 		}
 	};
-	
+
 	private UpnpRunnable upnpRunnable = new UpnpRunnable()
 	{
 
 		@Override
 		public void onFinished(ArrayList<UpnpDevice> upnpDeviceList)
 		{
-			if(upnpDeviceList  != null)
+			if (upnpDeviceList != null)
 			{
 				deviceList = upnpDeviceList;
 			}

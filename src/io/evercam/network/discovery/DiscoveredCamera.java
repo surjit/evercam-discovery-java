@@ -54,7 +54,7 @@ public class DiscoveredCamera implements Serializable
 	{
 		return ip;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -74,7 +74,7 @@ public class DiscoveredCamera implements Serializable
 	{
 		this.ip = ip;
 	}
-	
+
 	public void setName(String name)
 	{
 		this.name = name;
@@ -110,35 +110,35 @@ public class DiscoveredCamera implements Serializable
 		this.model = model;
 	}
 
-//	public int getUpnp()
-//	{
-//		return upnp;
-//	}
-//
-//	public void setUpnp(int upnp)
-//	{
-//		this.upnp = upnp;
-//	}
-//
-//	public int getBonjour()
-//	{
-//		return bonjour;
-//	}
-//
-//	public void setBonjour(int bonjour)
-//	{
-//		this.bonjour = bonjour;
-//	}
-//
-//	public int getOnvif()
-//	{
-//		return onvif;
-//	}
-//
-//	public void setOnvif(int onvif)
-//	{
-//		this.onvif = onvif;
-//	}
+	// public int getUpnp()
+	// {
+	// return upnp;
+	// }
+	//
+	// public void setUpnp(int upnp)
+	// {
+	// this.upnp = upnp;
+	// }
+	//
+	// public int getBonjour()
+	// {
+	// return bonjour;
+	// }
+	//
+	// public void setBonjour(int bonjour)
+	// {
+	// this.bonjour = bonjour;
+	// }
+	//
+	// public int getOnvif()
+	// {
+	// return onvif;
+	// }
+	//
+	// public void setOnvif(int onvif)
+	// {
+	// this.onvif = onvif;
+	// }
 
 	public int getHttp()
 	{
@@ -160,25 +160,25 @@ public class DiscoveredCamera implements Serializable
 		this.rtsp = rtsp;
 	}
 
-//	public int getFtp()
-//	{
-//		return ftp;
-//	}
-//
-//	public void setFtp(int ftp)
-//	{
-//		this.ftp = ftp;
-//	}
-//
-//	public int getSsh()
-//	{
-//		return ssh;
-//	}
-//
-//	public void setSsh(int ssh)
-//	{
-//		this.ssh = ssh;
-//	}
+	// public int getFtp()
+	// {
+	// return ftp;
+	// }
+	//
+	// public void setFtp(int ftp)
+	// {
+	// this.ftp = ftp;
+	// }
+	//
+	// public int getSsh()
+	// {
+	// return ssh;
+	// }
+	//
+	// public void setSsh(int ssh)
+	// {
+	// this.ssh = ssh;
+	// }
 
 	public int getExthttp()
 	{
@@ -200,91 +200,92 @@ public class DiscoveredCamera implements Serializable
 		this.extrtsp = extrtsp;
 	}
 
-//	public int getExtftp()
-//	{
-//		return extftp;
-//	}
-//
-//	public void setExtftp(int extftp)
-//	{
-//		this.extftp = extftp;
-//	}
-//
-//	public int getExtssh()
-//	{
-//		return extssh;
-//	}
-//
-//	public void setExtssh(int extssh)
-//	{
-//		this.extssh = extssh;
-//	}
-//
-//	public void setFlag(int flag)
-//	{
-//		this.flag = flag;
-//	}
-//
-//	public int getFlag()
-//	{
-//		return flag;
-//	}
+	// public int getExtftp()
+	// {
+	// return extftp;
+	// }
+	//
+	// public void setExtftp(int extftp)
+	// {
+	// this.extftp = extftp;
+	// }
+	//
+	// public int getExtssh()
+	// {
+	// return extssh;
+	// }
+	//
+	// public void setExtssh(int extssh)
+	// {
+	// this.extssh = extssh;
+	// }
+	//
+	// public void setFlag(int flag)
+	// {
+	// this.flag = flag;
+	// }
+	//
+	// public int getFlag()
+	// {
+	// return flag;
+	// }
 
-//	public String getSsid()
-//	{
-//		return ssid;
-//	}
-//
-//	public void setSsid(String ssid)
-//	{
-//		this.ssid = ssid;
-//	}
-//
-//	public String getFirstSeen()
-//	{
-//		return firstSeen;
-//	}
-//
-//	public void setFirstSeen(String firstSeen)
-//	{
-//		this.firstSeen = firstSeen;
-//	}
-//
-//	public String getLastSeen()
-//	{
-//		return lastSeen;
-//	}
-//
-//	public void setLastSeen(String lastSeen)
-//	{
-//		this.lastSeen = lastSeen;
-//	}
-//
-//	public int getActive()
-//	{
-//		return active;
-//	}
-//
-//	public void setActive(int active)
-//	{
-//		this.active = active;
-//	}
-//
-//	public boolean isActive()
-//	{
-//		return getActive() == 1;
-//	}
+	// public String getSsid()
+	// {
+	// return ssid;
+	// }
+	//
+	// public void setSsid(String ssid)
+	// {
+	// this.ssid = ssid;
+	// }
+	//
+	// public String getFirstSeen()
+	// {
+	// return firstSeen;
+	// }
+	//
+	// public void setFirstSeen(String firstSeen)
+	// {
+	// this.firstSeen = firstSeen;
+	// }
+	//
+	// public String getLastSeen()
+	// {
+	// return lastSeen;
+	// }
+	//
+	// public void setLastSeen(String lastSeen)
+	// {
+	// this.lastSeen = lastSeen;
+	// }
+	//
+	// public int getActive()
+	// {
+	// return active;
+	// }
+	//
+	// public void setActive(int active)
+	// {
+	// this.active = active;
+	// }
+	//
+	// public boolean isActive()
+	// {
+	// return getActive() == 1;
+	// }
 
 	@Override
 	public String toString()
 	{
-		return "Camera [id=" + id + ", ip=" + ip  + ", name=" + name + ", externalIp=" + externalIp + ", mac=" + mac + ", vendor=" + vendor
-				+ ",model=" + model + ",bonjour=" + bonjour + ",upnp=" + upnp + ",onvif=" + onvif
-				+ ",http=" + http + ",rtsp=" + rtsp + ",https=" + https + ",ftp=" + ftp + ",ssh="
-				+ ssh + ",extrtsp=" + extrtsp + ",exthttp=" + exthttp + ",flag=" + flag
-				+ ",firstseen=" + firstSeen + ",lastseen=" + lastSeen + ",username=" + username
-				+ ",password=" + password + ",jpg=" + jpg + ",h264=" + h264 + ",ssid=" + ssid
-				+ ",active=" + active + ",thumbnail=" + thumbnail + "]";
+		return "Camera [id=" + id + ", ip=" + ip + ", name=" + name + ", externalIp=" + externalIp
+				+ ", mac=" + mac + ", vendor=" + vendor + ",model=" + model + ",bonjour=" + bonjour
+				+ ",upnp=" + upnp + ",onvif=" + onvif + ",http=" + http + ",rtsp=" + rtsp
+				+ ",https=" + https + ",ftp=" + ftp + ",ssh=" + ssh + ",extrtsp=" + extrtsp
+				+ ",exthttp=" + exthttp + ",flag=" + flag + ",firstseen=" + firstSeen
+				+ ",lastseen=" + lastSeen + ",username=" + username + ",password=" + password
+				+ ",jpg=" + jpg + ",h264=" + h264 + ",ssid=" + ssid + ",active=" + active
+				+ ",thumbnail=" + thumbnail + "]";
 	}
 
 	public int getHttps()
@@ -347,35 +348,35 @@ public class DiscoveredCamera implements Serializable
 		this.h264 = h264;
 	}
 
-//	public int getPortForwarded()
-//	{
-//		return portForwarded;
-//	}
-//
-//	public void setPortForwarded(int portForwarded)
-//	{
-//		this.portForwarded = portForwarded;
-//	}
-//
-//	public int getEvercamConnected()
-//	{
-//		return evercamConnected;
-//	}
+	// public int getPortForwarded()
+	// {
+	// return portForwarded;
+	// }
+	//
+	// public void setPortForwarded(int portForwarded)
+	// {
+	// this.portForwarded = portForwarded;
+	// }
+	//
+	// public int getEvercamConnected()
+	// {
+	// return evercamConnected;
+	// }
 
-	public String getThumbnail() 
+	public String getThumbnail()
 	{
 		return thumbnail;
 	}
 
-	public void setThumbnail(String thumbnail) 
+	public void setThumbnail(String thumbnail)
 	{
 		this.thumbnail = thumbnail;
 	}
 
-//	public void setEvercamConnected(int evercamConnected)
-//	{
-//		this.evercamConnected = evercamConnected;
-//	}
+	// public void setEvercamConnected(int evercamConnected)
+	// {
+	// this.evercamConnected = evercamConnected;
+	// }
 
 	public boolean hasHTTP()
 	{
@@ -502,63 +503,62 @@ public class DiscoveredCamera implements Serializable
 		}
 		return false;
 	}
-	
+
 	public boolean hasExternalIp()
 	{
-		if(getExternalIp() != null && !getExternalIp().isEmpty())
+		if (getExternalIp() != null && !getExternalIp().isEmpty())
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean hasName()
 	{
 		return !getName().isEmpty();
 	}
-	
+
 	public DiscoveredCamera merge(DiscoveredCamera discoveredCamera)
 	{
-        if(discoveredCamera.hasMac())
-        {
-            setMAC(discoveredCamera.getMAC());
-        }
-        if(discoveredCamera.hasRTSP())
-        {
-            setRtsp(discoveredCamera.getRtsp());
-        }
-        if(!hasVendor() && discoveredCamera.hasVendor())
-        {
-            setVendor(discoveredCamera.getVendor());
-        }
-        if(!hasHTTP() && discoveredCamera.hasHTTP())
-        {
-            setHttp(discoveredCamera.getHttp());
-        }
-        if(!hasModel() && discoveredCamera.hasModel())
-        {
-            setModel(discoveredCamera.getModel());
-        }
-        if(discoveredCamera.hasExternalHttp())
-        {
-            setExthttp(discoveredCamera.getExthttp());
-        }
-        if(discoveredCamera.hasExternalRtsp())
-        {
-            setExtrtsp(discoveredCamera.getExtrtsp());
-        }
-        if(discoveredCamera.hasName())
-        {
-        	setName(discoveredCamera.getName());
-        }
-        
-        return this;
+		if (discoveredCamera.hasMac())
+		{
+			setMAC(discoveredCamera.getMAC());
+		}
+		if (discoveredCamera.hasRTSP())
+		{
+			setRtsp(discoveredCamera.getRtsp());
+		}
+		if (!hasVendor() && discoveredCamera.hasVendor())
+		{
+			setVendor(discoveredCamera.getVendor());
+		}
+		if (!hasHTTP() && discoveredCamera.hasHTTP())
+		{
+			setHttp(discoveredCamera.getHttp());
+		}
+		if (!hasModel() && discoveredCamera.hasModel())
+		{
+			setModel(discoveredCamera.getModel());
+		}
+		if (discoveredCamera.hasExternalHttp())
+		{
+			setExthttp(discoveredCamera.getExthttp());
+		}
+		if (discoveredCamera.hasExternalRtsp())
+		{
+			setExtrtsp(discoveredCamera.getExtrtsp());
+		}
+		if (discoveredCamera.hasName())
+		{
+			setName(discoveredCamera.getName());
+		}
+
+		return this;
 	}
-	
-	
+
 	public DiscoveredCamera mergePorts(ArrayList<Integer> portsList)
 	{
-		if(portsList.size() > 0)
+		if (portsList.size() > 0)
 		{
 			for (Integer port : portsList)
 			{
@@ -576,7 +576,7 @@ public class DiscoveredCamera implements Serializable
 				}
 			}
 		}
-		
+
 		return this;
 	}
 }

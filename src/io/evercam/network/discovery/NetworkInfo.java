@@ -146,25 +146,27 @@ public class NetworkInfo
 		return null;
 	}
 
-//	/**
-//	 * Return the network prefix length. Return 0 if no CIDR detected.
-//	 * FIXME: This method may return -1, which means it may not be the right approach
-//	 */
-//	public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
-//	{
-//		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-//		{
-//			InetAddress inetAddress = address.getAddress();
-//			if (!inetAddress.isLoopbackAddress())
-//			{
-//				if (inetAddress instanceof Inet4Address)
-//				{
-//					return address.getNetworkPrefixLength();
-//				}
-//			}
-//		}
-//		return 0;
-//	}
+	// /**
+	// * Return the network prefix length. Return 0 if no CIDR detected.
+	// * FIXME: This method may return -1, which means it may not be the right
+	// approach
+	// */
+	// public static int getCidrFromInterface(NetworkInterface networkInterface)
+	// throws IOException
+	// {
+	// for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+	// {
+	// InetAddress inetAddress = address.getAddress();
+	// if (!inetAddress.isLoopbackAddress())
+	// {
+	// if (inetAddress instanceof Inet4Address)
+	// {
+	// return address.getNetworkPrefixLength();
+	// }
+	// }
+	// }
+	// return 0;
+	// }
 
 	/**
 	 * Return the valid ipv4 address for the given network interface. Return
@@ -206,88 +208,89 @@ public class NetworkInfo
 		catch (IOException e)
 		{
 			e.printStackTrace();
-		} finally
+		}
+		finally
 		{
 			httpclient.getConnectionManager().shutdown();
 		}
 		return (extIP == null ? null : extIP.replace("\n", ""));
 	}
-	
+
 	/**
 	 * Run command 'netstat -rn' and abstract router IP
 	 * 
-	 * Example of Kernel IP routing table
-     * Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
-     * 0.0.0.0         192.168.1.1     0.0.0.0         UG        0 0          0 eth0
-     * 192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
-     * 
-	 * Return router IP in Linux system. Return empty string if exception occurred.
+	 * Example of Kernel IP routing table Destination Gateway Genmask Flags MSS
+	 * Window irtt Iface 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 192.168.1.0
+	 * 0.0.0.0 255.255.255.0 U 0 0 0 eth0
+	 * 
+	 * Return router IP in Linux system. Return empty string if exception
+	 * occurred.
 	 */
 	public static String getLinuxRouterIp()
 	{
 		try
 		{
-		    Process result = Runtime.getRuntime().exec("netstat -rn");
+			Process result = Runtime.getRuntime().exec("netstat -rn");
 
-		    BufferedReader output = new BufferedReader
-			(new InputStreamReader(result.getInputStream()));
+			BufferedReader output = new BufferedReader(new InputStreamReader(
+					result.getInputStream()));
 
-		    String line = output.readLine();
-		    while(line != null)
-		    {
+			String line = output.readLine();
+			while (line != null)
+			{
 				if (line.startsWith("0.0.0.0"))
 				{
 					break;
 				}
 				line = output.readLine();
-		    }
+			}
 
-		    StringTokenizer st = new StringTokenizer(line);
-		    st.nextToken();
-		    return st.nextToken();
+			StringTokenizer st = new StringTokenizer(line);
+			st.nextToken();
+			return st.nextToken();
 		}
-		catch( Exception e ) 
-		{ 
-		    System.out.println(e.toString());
-		    return "";
+		catch (Exception e)
+		{
+			System.out.println(e.toString());
+			return "";
 		}
 	}
-	
+
 	/**
 	 * Run command 'netstat -rn' and abstract subnet mask
 	 * 
-	 * Example of Kernel IP routing table
-     * Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
-     * 0.0.0.0         192.168.1.1     0.0.0.0         UG        0 0          0 eth0
-     * 192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
-     * 
-	 * Return subnet mask in Linux system. Return empty string if exception occurred.
+	 * Example of Kernel IP routing table Destination Gateway Genmask Flags MSS
+	 * Window irtt Iface 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 192.168.1.0
+	 * 0.0.0.0 255.255.255.0 U 0 0 0 eth0
+	 * 
+	 * Return subnet mask in Linux system. Return empty string if exception
+	 * occurred.
 	 */
 	public static String getLinuxSubnetMask()
 	{
 		try
 		{
-		    Process result = Runtime.getRuntime().exec("netstat -rn");
+			Process result = Runtime.getRuntime().exec("netstat -rn");
 
-		    BufferedReader output = new BufferedReader
-			(new InputStreamReader(result.getInputStream()));
+			BufferedReader output = new BufferedReader(new InputStreamReader(
+					result.getInputStream()));
 
-		    String line = output.readLine();
-		    while(line != null)
-		    {
-		    	StringTokenizer st = new StringTokenizer(line);
-			    st.nextToken();
-			    String gateway = st.nextToken();
-			    if(gateway.equals("0.0.0.0"))
-			    {
-			    	return st.nextToken();
-			    }
+			String line = output.readLine();
+			while (line != null)
+			{
+				StringTokenizer st = new StringTokenizer(line);
+				st.nextToken();
+				String gateway = st.nextToken();
+				if (gateway.equals("0.0.0.0"))
+				{
+					return st.nextToken();
+				}
 				line = output.readLine();
-		    }
+			}
 		}
-		catch( Exception e ) 
-		{ 
-		    System.out.println(e.toString());
+		catch (Exception e)
+		{
+			System.out.println(e.toString());
 		}
 		return "";
 	}

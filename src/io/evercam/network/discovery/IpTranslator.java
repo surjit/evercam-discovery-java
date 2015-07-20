@@ -56,8 +56,9 @@ public class IpTranslator
 	public static String cidrToMask(int cidr)
 	{
 		int value = 0xffffffff << (32 - cidr);
-		byte[] bytes = new byte[] { (byte) (value >>> 24), (byte) (value >> 16 & 0xff),
-				(byte) (value >> 8 & 0xff), (byte) (value & 0xff) };
+		byte[] bytes = new byte[]
+		{ (byte) (value >>> 24), (byte) (value >> 16 & 0xff), (byte) (value >> 8 & 0xff),
+				(byte) (value & 0xff) };
 
 		InetAddress netAddr;
 		try

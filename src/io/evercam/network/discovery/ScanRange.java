@@ -16,14 +16,15 @@ public class ScanRange
 		setUpStartAndEnd(cidr);
 	}
 
-	//TODO: Temporary disabled this because get cidr from interface is not working sometimes
-//	public ScanRange(NetworkInterface networkInterface) throws Exception
-//	{
-//		scanIp = IpTranslator.getUnsignedLongFromIp(NetworkInfo
-//				.getIpFromInterface(networkInterface));
-//		int cidr = NetworkInfo.getCidrFromInterface(networkInterface);
-//		setUpStartAndEnd(cidr);
-//	}
+	// TODO: Temporary disabled this because get cidr from interface is not
+	// working sometimes
+	// public ScanRange(NetworkInterface networkInterface) throws Exception
+	// {
+	// scanIp = IpTranslator.getUnsignedLongFromIp(NetworkInfo
+	// .getIpFromInterface(networkInterface));
+	// int cidr = NetworkInfo.getCidrFromInterface(networkInterface);
+	// setUpStartAndEnd(cidr);
+	// }
 
 	private void setUpStartAndEnd(int cidr)
 	{
@@ -49,7 +50,7 @@ public class ScanRange
 	{
 		return routerIp;
 	}
-	
+
 	public String getRouterIpString()
 	{
 		return routerIpString;

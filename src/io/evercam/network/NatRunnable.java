@@ -1,21 +1,21 @@
 package io.evercam.network;
 
-import java.util.ArrayList;
-
 import io.evercam.network.discovery.GatewayDevice;
 import io.evercam.network.discovery.NatMapEntry;
+
+import java.util.ArrayList;
 
 public abstract class NatRunnable implements Runnable
 {
 	String routerIp;
-	
+
 	public NatRunnable(String routerIp)
 	{
 		this.routerIp = routerIp;
 	}
-	
+
 	@Override
-	public void run() 
+	public void run()
 	{
 		try
 		{
@@ -28,13 +28,14 @@ public abstract class NatRunnable implements Runnable
 			e.printStackTrace();
 		}
 	}
-    
+
 	/**
 	 * Callback for NAT discovery results
 	 * 
 	 * Check if mapEntries is null before invoking it
 	 * 
-	 * @param mapEntries the discovered NAT table
+	 * @param mapEntries
+	 *            the discovered NAT table
 	 */
-    public abstract void onFinished(ArrayList<NatMapEntry> mapEntries);
+	public abstract void onFinished(ArrayList<NatMapEntry> mapEntries);
 }
