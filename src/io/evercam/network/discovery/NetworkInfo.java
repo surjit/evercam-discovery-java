@@ -2,7 +2,9 @@ package io.evercam.network.discovery;
 
 import io.evercam.network.Constants;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -11,6 +13,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -208,5 +211,84 @@ public class NetworkInfo
 			httpclient.getConnectionManager().shutdown();
 		}
 		return (extIP == null ? null : extIP.replace("\n", ""));
+	}
+	
+	/**
+	 * Run command 'netstat -rn' and abstract router IP
+	 * 
+	 * Example of Kernel IP routing table
+     * Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+     * 0.0.0.0         192.168.1.1     0.0.0.0         UG        0 0          0 eth0
+     * 192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
+     * 
+	 * Return router IP in Linux system. Return empty string if exception occurred.
+	 */
+	public static String getLinuxRouterIp()
+	{
+		try
+		{
+		    Process result = Runtime.getRuntime().exec("netstat -rn");
+
+		    BufferedReader output = new BufferedReader
+			(new InputStreamReader(result.getInputStream()));
+
+		    String line = output.readLine();
+		    while(line != null)
+		    {
+				if (line.startsWith("0.0.0.0"))
+				{
+					break;
+				}
+				line = output.readLine();
+		    }
+
+		    StringTokenizer st = new StringTokenizer(line);
+		    st.nextToken();
+		    return st.nextToken();
+		}
+		catch( Exception e ) 
+		{ 
+		    System.out.println(e.toString());
+		    return "";
+		}
+	}
+	
+	/**
+	 * Run command 'netstat -rn' and abstract subnet mask
+	 * 
+	 * Example of Kernel IP routing table
+     * Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+     * 0.0.0.0         192.168.1.1     0.0.0.0         UG        0 0          0 eth0
+     * 192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
+     * 
+	 * Return subnet mask in Linux system. Return empty string if exception occurred.
+	 */
+	public static String getLinuxSubnetMask()
+	{
+		try
+		{
+		    Process result = Runtime.getRuntime().exec("netstat -rn");
+
+		    BufferedReader output = new BufferedReader
+			(new InputStreamReader(result.getInputStream()));
+
+		    String line = output.readLine();
+		    while(line != null)
+		    {
+		    	StringTokenizer st = new StringTokenizer(line);
+			    st.nextToken();
+			    String gateway = st.nextToken();
+			    if(gateway.equals("0.0.0.0"))
+			    {
+			    	return st.nextToken();
+			    }
+				line = output.readLine();
+		    }
+		}
+		catch( Exception e ) 
+		{ 
+		    System.out.println(e.toString());
+		}
+		return "";
 	}
 }

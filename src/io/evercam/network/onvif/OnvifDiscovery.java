@@ -56,7 +56,7 @@ public abstract class OnvifDiscovery
 		    ArrayList<String> uuidArrayList = new ArrayList<String>();
             while (true)
             {
-            	System.out.println("Receiving...");
+            	//System.out.println("Receiving...");
 			    byte[] responseMessageByteArray = new byte[3072];
 			    DatagramPacket datagramPacketRecieve = new DatagramPacket(responseMessageByteArray, responseMessageByteArray.length);
 			    datagramSocket.receive(datagramPacketRecieve);
@@ -89,7 +89,7 @@ public abstract class OnvifDiscovery
 		   
 		} catch (Exception e) 
 		{
-			System.out.println("Socket error: " + e.getMessage());
+			//ONVIF timeout. Don't print anything.
 		}
 		
 		return cameraList;
