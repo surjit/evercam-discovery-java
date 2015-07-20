@@ -1,9 +1,17 @@
-#Evercam Discovery Library in Java
+#Network Discovery Library in Java
 
-A network scanning library in Java for discovering IP camras, includes IP scan, port scan, UPnP device discovery, ONVIF discovery and additional camera discovery for thumbnail and defaults(username, password, URLs).
+A network scanning library in Java for discovering IP camras, includes IP scan, port scan, UPnP device discovery, ONVIF discovery and additional camera discovery for thumbnail and defaults(username, password, URLs). See the [flow diagram](#flow-diagram) for more logical details.
+
+## Help make it better
+
+The entire Evercam codebase is open source, see details: http://www.evercam.io/open-source. We'd love to see your pull requests!
+
+For any bugs and discussions, please use [Github Issues](https://github.com/evercam/evercam-discovery-java/issues).
+
+Any questions or suggestions around Evercam, drop us a line: http://www.evercam.io/contact
 
 ##Usage
-Directly include the [JAR file](https://github.com/evercam/networkscan.java/blob/master/evercam-networkscan.jar) in the classpath, Java doc will be associated with your project as well.
+Directly add the jar file to the classpath, Java doc will be associated with it as well. (The default jar file does not contain dependencies)
 
 ##Examples
 Scan local network, find camera devices with options of including camera thumbnail and defaults or not, and return all discovered camera details(IP address, internal & external HTTP & RTSP ports, MAC address, vendor, model, thumbmnail, default username, password and URLs), currently only work for Android.
@@ -61,6 +69,15 @@ ArrayList<UpnpDevice> deviceList = upnpDiscovery.getUpnpDevices();
 //Retrieve NAT table
 GatewayDevice gatewayDevice = new GatewayDevice("192.168.1.1");
 ArrayList<NatMapEntry> mapEntries = gatewayDevice.getNatTableArray();
+
+//ONVIF discovery
+new OnvifDiscovery(){
+	@Override
+	public void onActiveOnvifDevice(DiscoveredCamera discoveredCamera)
+	{
+		onDeviceFound(discoveredCamera);
+	}
+}.probe();
 ```
 
 ## Flow Diagram
