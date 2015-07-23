@@ -42,7 +42,7 @@ public abstract class OnvifDiscovery
 
 			if (multicastAddress == null)
 			{
-				System.out.println("InetAddress.getByName() for multicast returns null");
+				//System.out.println("InetAddress.getByName() for multicast returns null");
 				return cameraList;
 			}
 
@@ -65,7 +65,7 @@ public abstract class OnvifDiscovery
 
 				String responseMessage = new String(datagramPacketRecieve.getData());
 
-				System.out.println("\nResponse Message:\n" + responseMessage);
+				//System.out.println("\nResponse Message:\n" + responseMessage);
 
 				StringReader stringReader = new StringReader(responseMessage);
 				InputNode localInputNode = NodeBuilder.read(stringReader);
@@ -73,7 +73,7 @@ public abstract class OnvifDiscovery
 						EnvelopeProbeMatches.class, localInputNode);
 				if (localEnvelopeProbeMatches.BodyProbeMatches.ProbeMatches.listProbeMatches.size() <= 0)
 				{
-					System.out.println("No probe matches");
+					//System.out.println("No probe matches");
 					continue;
 				}
 
@@ -93,7 +93,6 @@ public abstract class OnvifDiscovery
 				onActiveOnvifDevice(discoveredCamera);
 				cameraList.add(discoveredCamera);
 			}
-
 		}
 		catch (Exception e)
 		{

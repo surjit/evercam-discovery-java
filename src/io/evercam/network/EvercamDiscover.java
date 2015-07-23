@@ -29,6 +29,7 @@ public class EvercamDiscover
 	private ArrayList<NatMapEntry> mapEntries = new ArrayList<NatMapEntry>();// NAT
 																				// table
 	private ArrayList<DiscoveredCamera> cameraList = new ArrayList<DiscoveredCamera>();
+	private ArrayList<DiscoveredCamera> onvifDeviceList = new ArrayList<DiscoveredCamera>();
 	private boolean upnpDone = false;
 	private boolean natDone = false;
 	private int countDone = 0;
@@ -188,6 +189,10 @@ public class EvercamDiscover
 		{
 			Thread.sleep(1000);
 		}
+		
+		//Merge ONVIF devices to discovered camera list
+		mergeOnvifDeviceListToCameraList();
+		
 		pool.shutdown();
 
 		try
@@ -295,8 +300,39 @@ public class EvercamDiscover
 		public void onDeviceFound(DiscoveredCamera discoveredCamera)
 		{
 			discoveredCamera.setExternalIp(externalIp);
+			onvifDeviceList.add(discoveredCamera);
 		}
 	};
+	
+	public void mergeOnvifDeviceListToCameraList()
+	{
+		if(onvifDeviceList.size() > 0)
+		{
+			for(DiscoveredCamera onvifCamera : onvifDeviceList)
+			{
+				boolean matched = false;
+				for(DiscoveredCamera discoveredCamera : cameraList)
+				{
+					if(discoveredCamera.getIP().equals(onvifCamera.getIP()))
+					{
+						matched = true;
+						if(onvifCamera.hasModel())
+						{
+							discoveredCamera.setModel(onvifCamera.getModel());
+							discoveredCamera.setHttp(onvifCamera.getHttp());
+						}
+							
+						break;
+					}
+				}
+				
+				if(!matched)
+				{
+					cameraList.add(onvifCamera);
+				}
+			}
+		}
+	}
 
 	private UpnpRunnable upnpRunnable = new UpnpRunnable()
 	{
