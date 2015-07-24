@@ -219,9 +219,10 @@ public class NetworkInfo
 	/**
 	 * Run command 'netstat -rn' and abstract router IP
 	 * 
-	 * Example of Kernel IP routing table Destination Gateway Genmask Flags MSS
-	 * Window irtt Iface 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 192.168.1.0
-	 * 0.0.0.0 255.255.255.0 U 0 0 0 eth0
+	 * Example of Kernel IP routing table 
+	 * Destination Gateway Genmask Flags MSS Window irtt Iface 
+	 * 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 
+	 * 192.168.1.0 0.0.0.0 255.255.255.0 U 0 0 0 eth0
 	 * 
 	 * Return router IP in Linux system. Return empty string if exception
 	 * occurred.
@@ -251,7 +252,10 @@ public class NetworkInfo
 		}
 		catch (Exception e)
 		{
-			System.out.println(e.toString());
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 			return "";
 		}
 	}
@@ -290,7 +294,10 @@ public class NetworkInfo
 		}
 		catch (Exception e)
 		{
-			System.out.println(e.toString());
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		return "";
 	}

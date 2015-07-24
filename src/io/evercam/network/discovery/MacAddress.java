@@ -18,7 +18,7 @@ public class MacAddress
 	 * @param ip
 	 *            host IP address
 	 */
-	public static String getByIpAndroid(String ip)
+	public static String getByIpLinux(String ip)
 	{
 		final String MAC_RE = "^%s\\s+0x1\\s+0x2\\s+([:0-9a-fA-F]+)\\s+\\*\\s+\\w+$";
 		final int BUF = 8 * 1024;

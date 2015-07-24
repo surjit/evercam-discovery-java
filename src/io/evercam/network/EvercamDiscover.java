@@ -73,18 +73,44 @@ public class EvercamDiscover
 	 * @return a list of discovered camera devices
 	 * @throws Exception
 	 */
-	public ArrayList<DiscoveredCamera> discoverAllAndroid(ScanRange scanRange) throws Exception
+	public ArrayList<DiscoveredCamera> discoverAllLinux(ScanRange scanRange) throws Exception
 	{
 		pool = Executors.newFixedThreadPool(DEFAULT_FIXED_POOL);
 		// Request for external IP address
 		externalIp = NetworkInfo.getExternalIP();
+
+		if (!pool.isShutdown())
+		{
+			// ONVIF discovery
+			pool.execute(onvifRunnable);
+			printLogMessage("Discovering ONVIF devices......");
+			// Start UPnP discovery
+			pool.execute(upnpRunnable);
+			printLogMessage("Discovering UPnP devices......");
+			// Start UPnP router discovery
+			pool.execute(new NatRunnable(scanRange.getRouterIpString())
+			{
+				@Override
+				public void onFinished(ArrayList<NatMapEntry> mapEntries)
+				{
+					printLogMessage("NAT discovery finished.");
+					if (mapEntries != null)
+					{
+						EvercamDiscover.this.mapEntries = mapEntries;
+					}
+					natDone = true;
+				}
+			});
+			printLogMessage("Discovering NAT table......");
+		}
+		
 		// Scan to get a list of active IP addresses.
 		IpScan ipScan = new IpScan(new ScanResult()
 		{
 			@Override
 			public void onActiveIp(String ip)
 			{
-				System.out.println("Active IP: " + ip);
+				printLogMessage("Active IP: " + ip);
 				activeIpList.add(ip);
 			}
 
@@ -93,37 +119,16 @@ public class EvercamDiscover
 			{
 				// TODO Auto-generated method stub
 			}
-
 		});
 		ipScan.scanAll(scanRange);
 
-		if (!pool.isShutdown())
-		{
-			// ONVIF discovery
-			pool.execute(onvifRunnable);
-			// Start UPnP discovery
-			pool.execute(upnpRunnable);
-			// Start UPnP router discovery
-			pool.execute(new NatRunnable(scanRange.getRouterIpString())
-			{
-
-				@Override
-				public void onFinished(ArrayList<NatMapEntry> mapEntries)
-				{
-					if (mapEntries != null)
-					{
-						EvercamDiscover.this.mapEntries = mapEntries;
-					}
-					natDone = true;
-				}
-			});
-		}
-
 		while (!upnpDone || !natDone)
 		{
+			printLogMessage("Waiting for UPnP & NAT discovery...");
 			Thread.sleep(500);
 		}
 
+		printLogMessage("Identifying cameras......");
 		// For each active IP, request for MAC address and vendor
 		for (int index = 0; index < activeIpList.size(); index++)
 		{
@@ -148,12 +153,14 @@ public class EvercamDiscover
 
 							if (withThumbnail)
 							{
+								printLogMessage("Retrieving thumbnail URL for camera " + discoveredCamera.getIP());
 								discoveredCamera.setThumbnail(EvercamQuery.getThumbnailUrlFor(
 										discoveredCamera.getVendor(), discoveredCamera.getModel()));
 							}
 
 							if (withDefaults)
 							{
+								printLogMessage("Retrieving defaults for camera " + discoveredCamera.getIP());
 								Defaults defaults = vendor.getDefaultModel().getDefaults();
 								String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
 								String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
@@ -187,6 +194,7 @@ public class EvercamDiscover
 
 		while (countDone != activeIpList.size())
 		{
+			printLogMessage("Camera identification is not finished yet, waiting...");
 			Thread.sleep(1000);
 		}
 		
@@ -249,7 +257,7 @@ public class EvercamDiscover
 		}
 		catch (Exception e)
 		{
-			System.out.println(e.getStackTrace().toString());
+			printLogMessage("Exception while merging UPnP device: " +e.getStackTrace().toString());
 		}
 		return camera;
 	}
@@ -293,12 +301,13 @@ public class EvercamDiscover
 		@Override
 		public void onFinished()
 		{
-			// TODO Auto-generated method stub
+			printLogMessage("ONVIF discovery finished.");
 		}
 
 		@Override
 		public void onDeviceFound(DiscoveredCamera discoveredCamera)
 		{
+			printLogMessage("Found ONVIF device: " + discoveredCamera.getIP());
 			discoveredCamera.setExternalIp(externalIp);
 			onvifDeviceList.add(discoveredCamera);
 		}
@@ -340,6 +349,7 @@ public class EvercamDiscover
 		@Override
 		public void onFinished(ArrayList<UpnpDevice> upnpDeviceList)
 		{
+			printLogMessage("UPnP discovery finished.");
 			if (upnpDeviceList != null)
 			{
 				deviceList = upnpDeviceList;
@@ -350,7 +360,20 @@ public class EvercamDiscover
 		@Override
 		public void onDeviceFound(UpnpDevice upnpDevice)
 		{
-			// TODO Auto-generated method stub
+			printLogMessage("Found UPnP device: " + upnpDevice.getIp());
 		}
 	};
+	
+	/**
+	 * Only print the logging message when logging is enabled
+	 * 
+	 * @param message The logging message to be printed in console
+	 */
+	public static void printLogMessage(String message)
+	{
+		if(Constants.ENABLE_LOGGING)
+		{
+			System.out.println(message);
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package io.evercam.network.onvif;
 
+import io.evercam.network.EvercamDiscover;
 import io.evercam.network.discovery.DiscoveredCamera;
 
 import java.io.StringReader;
@@ -84,7 +85,7 @@ public abstract class OnvifDiscovery
 				// localProbeMatch.XAddrs);
 				if (uuidArrayList.contains(localProbeMatch.EndpointReference.Address))
 				{
-					System.out.println("Address: " + localProbeMatch.EndpointReference.Address
+					EvercamDiscover.printLogMessage("ONVIFDiscovery: Address " + localProbeMatch.EndpointReference.Address
 							+ " already added");
 					continue;
 				}
@@ -152,12 +153,12 @@ public abstract class OnvifDiscovery
 			}
 			catch (MalformedURLException localMalformedURLException)
 			{
-				System.out.println("Cannot parse xAddr: " + probeMatch.XAddrs);
+				EvercamDiscover.printLogMessage("Cannot parse xAddr: " + probeMatch.XAddrs);
 			}
 		}
 		catch (Exception e)
 		{
-			System.out.println("Parse ONVIF search result error: " + e.getMessage());
+			EvercamDiscover.printLogMessage("Parse ONVIF search result error: " + e.getMessage());
 		}
 		return discoveredCamera;
 	}

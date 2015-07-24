@@ -5,6 +5,8 @@ import io.evercam.Defaults;
 import io.evercam.EvercamException;
 import io.evercam.Model;
 import io.evercam.Vendor;
+import io.evercam.network.Constants;
+import io.evercam.network.EvercamDiscover;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -31,7 +33,10 @@ public class EvercamQuery
 		}
 		catch (EvercamException e)
 		{
-			System.out.println(e.toString());
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 			return null;
 		}
 		return null;
@@ -134,7 +139,7 @@ public class EvercamQuery
 			}
 			catch (EvercamException e)
 			{
-				System.out.println("Model " + modelId + " doesn't exist");
+				EvercamDiscover.printLogMessage("Model " + modelId + " doesn't exist");
 			}
 		}
 

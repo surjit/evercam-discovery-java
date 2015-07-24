@@ -8,6 +8,11 @@ import java.util.ArrayList;
 
 public class Main
 {
+	/**
+	 * Discover all cameras in local network and print them in console
+	 * 
+	 * @param args pass parameter -v/--verbose to enable verbose logging
+	 */
 	public static void main(String[] args)
 	{
 		// InputStreamReader inputStream = new InputStreamReader(System.in);
@@ -27,21 +32,29 @@ public class Main
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
+		
+		if(args.length > 0)
+		{
+			if(args[0].equals("-v") || args[0].equals("--verbose"))
+			{
+				Constants.ENABLE_LOGGING = true;
+			}
+		}
+		
 		String routerIp = NetworkInfo.getLinuxRouterIp();
 		String subnetMask = NetworkInfo.getLinuxSubnetMask();
 
-		System.out.println("Network router IP: " + routerIp + " subnet mask: " + subnetMask
-				+ "......");
-		System.out.println("Scanning...");
+		EvercamDiscover.printLogMessage("Network router IP: " + routerIp + " subnet mask: " + subnetMask);
+		EvercamDiscover.printLogMessage("Scanning...");
 
 		try
 		{
 			ScanRange scanRange = new ScanRange(routerIp, subnetMask);
 
 			ArrayList<DiscoveredCamera> cameraList = new EvercamDiscover().withDefaults(true)
-					.withThumbnail(true).discoverAllAndroid(scanRange);
+					.withThumbnail(true).discoverAllLinux(scanRange);
 
-			System.out.println("Scanning finished, found " + cameraList.size() + " cameras");
+			EvercamDiscover.printLogMessage("Scanning finished, found " + cameraList.size() + " cameras");
 			if (cameraList.size() > 0)
 			{
 				for (DiscoveredCamera camera : cameraList)
@@ -49,11 +62,14 @@ public class Main
 					System.out.println(camera.toString());
 				}
 			}
+			EvercamDiscover.printLogMessage("On normal completion: 0");
+			System.exit(0);
 		}
 		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			EvercamDiscover.printLogMessage("On error: 1");
+			System.exit(1);
 		}
 	}
 }

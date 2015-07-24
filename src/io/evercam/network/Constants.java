@@ -5,6 +5,8 @@ public class Constants
 	private Constants()
 	{
 	}
+	
+	public static boolean ENABLE_LOGGING = false;
 
 	// device types
 	public static final int TYPE_CAMERA = 1;

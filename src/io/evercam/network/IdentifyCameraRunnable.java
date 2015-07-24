@@ -22,7 +22,7 @@ public abstract class IdentifyCameraRunnable implements Runnable
 	{
 		try
 		{
-			String macAddress = MacAddress.getByIpAndroid(ip);
+			String macAddress = MacAddress.getByIpLinux(ip);
 			if (!macAddress.equals(Constants.EMPTY_MAC))
 			{
 				Vendor vendor = EvercamQuery.getCameraVendorByMac(macAddress);
@@ -31,6 +31,7 @@ public abstract class IdentifyCameraRunnable implements Runnable
 					String vendorId = vendor.getId();
 					if (!vendorId.isEmpty())
 					{
+						EvercamDiscover.printLogMessage(ip + " is identified as a camera, vendor is: " + vendorId);
 						// Then fill details discovered from IP scan
 						DiscoveredCamera camera = new DiscoveredCamera(ip);
 						camera.setMAC(macAddress);
@@ -53,7 +54,10 @@ public abstract class IdentifyCameraRunnable implements Runnable
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		onFinished();
