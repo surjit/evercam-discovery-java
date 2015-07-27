@@ -262,35 +262,36 @@ public class EvercamDiscover
 		return camera;
 	}
 
-	public static DiscoveredCamera mergeNatEntryToCameraIfMatches(DiscoveredCamera camera,
+	public static DiscoveredCamera mergeNatEntryToCamera(DiscoveredCamera camera,
 			NatMapEntry mapEntry)
 	{
-		String natIp = mapEntry.getIpAddress();
 		int natInternalPort = mapEntry.getInternalPort();
 		int natExternalPort = mapEntry.getExternalPort();
 
-		if (camera.getIP().equals(natIp))
+		if (camera.getHttp() == natInternalPort)
 		{
-			if (camera.getHttp() == natInternalPort)
-			{
-				camera.setExthttp(natExternalPort);
-			}
-			if (camera.getRtsp() == natInternalPort)
-			{
-				camera.setExtrtsp(natExternalPort);
-			}
+			camera.setExthttp(natExternalPort);
 		}
+		if (camera.getRtsp() == natInternalPort)
+		{
+			camera.setExtrtsp(natExternalPort);
+		}
+		
 		return camera;
 	}
 
 	public static DiscoveredCamera mergeNatTableToCamera(DiscoveredCamera camera,
 			ArrayList<NatMapEntry> mapEntries)
 	{
-		if (mapEntries.size() > 0)
+		if (mapEntries != null && mapEntries.size() > 0)
 		{
 			for (NatMapEntry mapEntry : mapEntries)
 			{
-				mergeNatEntryToCameraIfMatches(camera, mapEntry);
+				String natIp = mapEntry.getIpAddress();
+				if (camera.getIP().equals(natIp))
+				{
+					mergeNatEntryToCamera(camera, mapEntry);
+				}
 			}
 		}
 		return camera;
