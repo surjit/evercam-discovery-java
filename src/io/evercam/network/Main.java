@@ -6,12 +6,16 @@ import io.evercam.network.discovery.ScanRange;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class Main
 {
 	/**
 	 * Discover all cameras in local network and print them in console
 	 * 
-	 * @param args pass parameter -v/--verbose to enable verbose logging
+	 * @param args
+	 *            pass parameter -v/--verbose to enable verbose logging
 	 */
 	public static void main(String[] args)
 	{
@@ -32,19 +36,20 @@ public class Main
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
-		
-		if(args.length > 0)
+
+		if (args.length > 0)
 		{
-			if(args[0].equals("-v") || args[0].equals("--verbose"))
+			if (args[0].equals("-v") || args[0].equals("--verbose"))
 			{
 				Constants.ENABLE_LOGGING = true;
 			}
 		}
-		
+
 		String routerIp = NetworkInfo.getLinuxRouterIp();
 		String subnetMask = NetworkInfo.getLinuxSubnetMask();
 
-		EvercamDiscover.printLogMessage("Network router IP: " + routerIp + " subnet mask: " + subnetMask);
+		EvercamDiscover.printLogMessage("Network router IP: " + routerIp + " subnet mask: "
+				+ subnetMask);
 		EvercamDiscover.printLogMessage("Scanning...");
 
 		try
@@ -54,14 +59,11 @@ public class Main
 			ArrayList<DiscoveredCamera> cameraList = new EvercamDiscover().withDefaults(true)
 					.withThumbnail(true).discoverAllLinux(scanRange);
 
-			EvercamDiscover.printLogMessage("Scanning finished, found " + cameraList.size() + " cameras");
-			if (cameraList.size() > 0)
-			{
-				for (DiscoveredCamera camera : cameraList)
-				{
-					System.out.println(camera.toString());
-				}
-			}
+			EvercamDiscover.printLogMessage("Scanning finished, found " + cameraList.size()
+					+ " cameras");
+
+			printAsJson(cameraList);
+
 			EvercamDiscover.printLogMessage("On normal completion: 0");
 			System.exit(0);
 		}
@@ -70,6 +72,24 @@ public class Main
 			e.printStackTrace();
 			EvercamDiscover.printLogMessage("On error: 1");
 			System.exit(1);
+		}
+	}
+
+	private static void printAsJson(ArrayList<DiscoveredCamera> cameraList)
+	{
+		if (cameraList.size() > 0)
+		{
+			JSONArray jsonArray = new JSONArray();
+
+			for (DiscoveredCamera camera : cameraList)
+			{
+				JSONObject jsonObject = camera.toJsonObject();
+				jsonArray.put(jsonObject);
+			}
+
+			JSONObject arrayJsonObject = new JSONObject().put("cameras", jsonArray);
+
+			System.out.println(arrayJsonObject.toString(4));
 		}
 	}
 }

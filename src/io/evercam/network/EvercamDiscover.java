@@ -194,8 +194,8 @@ public class EvercamDiscover
 
 		while (countDone != activeIpList.size())
 		{
-			printLogMessage("Camera identification is not finished yet, waiting...");
-			Thread.sleep(1000);
+			printLogMessage("Identifying cameras...");
+			Thread.sleep(2000);
 		}
 		
 		//Merge ONVIF devices to discovered camera list

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 /**
  * The serializable camera object returned from discovery.
  */
@@ -578,5 +580,27 @@ public class DiscoveredCamera implements Serializable
 		}
 
 		return this;
+	}
+	
+	public JSONObject toJsonObject()
+	{
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("ip", getIP());
+		jsonObject.put("name", getName());
+		jsonObject.put("mac_address", getMAC());
+		jsonObject.put("ext_ip", getExternalIp());
+		jsonObject.put("vendor", getVendor());
+		jsonObject.put("model", getModel());
+		jsonObject.put("http", getHttp());
+		jsonObject.put("rtsp", getRtsp());
+		jsonObject.put("ext_http", getExthttp());
+		jsonObject.put("ext_rtsp", getExtrtsp());
+		jsonObject.put("cam_username", getUsername());
+		jsonObject.put("cam_password", getPassword());
+		jsonObject.put("jpg", getJpg());
+		jsonObject.put("h264", getH264());
+		jsonObject.put("thumbnail_url", getThumbnail());
+		
+		return jsonObject;
 	}
 }
