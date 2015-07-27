@@ -5,6 +5,7 @@ import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

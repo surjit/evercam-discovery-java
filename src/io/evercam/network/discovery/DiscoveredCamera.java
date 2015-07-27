@@ -4,6 +4,7 @@ import io.evercam.network.Constants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import org.json.JSONObject;
@@ -584,23 +585,24 @@ public class DiscoveredCamera implements Serializable
 	
 	public JSONObject toJsonObject()
 	{
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("ip", getIP());
-		jsonObject.put("name", getName());
-		jsonObject.put("mac_address", getMAC());
-		jsonObject.put("ext_ip", getExternalIp());
-		jsonObject.put("vendor", getVendor());
-		jsonObject.put("model", getModel());
-		jsonObject.put("http", getHttp());
-		jsonObject.put("rtsp", getRtsp());
-		jsonObject.put("ext_http", getExthttp());
-		jsonObject.put("ext_rtsp", getExtrtsp());
-		jsonObject.put("cam_username", getUsername());
-		jsonObject.put("cam_password", getPassword());
-		jsonObject.put("jpg", getJpg());
-		jsonObject.put("h264", getH264());
-		jsonObject.put("thumbnail_url", getThumbnail());
+		LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
 		
-		return jsonObject;
+		jsonOrderedMap.put("lan_ip", getIP());
+		jsonOrderedMap.put("friendly_name", getName());
+		jsonOrderedMap.put("mac_address", getMAC());
+		jsonOrderedMap.put("wan_ip", getExternalIp());
+		jsonOrderedMap.put("vendor_id", getVendor());
+		jsonOrderedMap.put("model_id", getModel());
+		jsonOrderedMap.put("lan_http_port", getHttp());
+		jsonOrderedMap.put("lan_rtsp_port", getRtsp());
+		jsonOrderedMap.put("wan_http_port", getExthttp());
+		jsonOrderedMap.put("wan_rtsp_port", getExtrtsp());
+		jsonOrderedMap.put("default_username", getUsername());
+		jsonOrderedMap.put("default_password", getPassword());
+		jsonOrderedMap.put("http_jpg_path", getJpg());
+		jsonOrderedMap.put("rtsp_h264_path", getH264());
+		jsonOrderedMap.put("vendor_thumbnail_url", getThumbnail());
+		
+		return new JSONObject(jsonOrderedMap);
 	}
 }
