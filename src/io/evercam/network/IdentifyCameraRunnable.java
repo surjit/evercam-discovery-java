@@ -45,9 +45,9 @@ public abstract class IdentifyCameraRunnable implements Runnable
 						if (activePortList.size() > 0)
 						{
 							camera = camera.mergePorts(activePortList);
-
-							onCameraFound(camera, vendor);
 						}
+						
+						onCameraFound(camera, vendor);
 					}
 				}
 			}

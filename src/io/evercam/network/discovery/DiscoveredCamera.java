@@ -46,7 +46,8 @@ public class DiscoveredCamera implements Serializable
 	private int portForwarded = 0; // 1:yes 0:no
 	private int evercamConnected = 0; // 1:yes 0:no
 	private int active = 0; // 1:yes 0:no
-	private String thumbnail = "";
+	private String vendorThumbnailUrl = "";
+	private String modelThumbnailUrl = "";
 
 	public DiscoveredCamera(String ip)
 	{
@@ -288,7 +289,7 @@ public class DiscoveredCamera implements Serializable
 				+ ",exthttp=" + exthttp + ",flag=" + flag + ",firstseen=" + firstSeen
 				+ ",lastseen=" + lastSeen + ",username=" + username + ",password=" + password
 				+ ",jpg=" + jpg + ",h264=" + h264 + ",ssid=" + ssid + ",active=" + active
-				+ ",thumbnail=" + thumbnail + "]";
+				+ ",vendorThumbnail=" + vendorThumbnailUrl + "]";
 	}
 
 	public int getHttps()
@@ -366,14 +367,24 @@ public class DiscoveredCamera implements Serializable
 	// return evercamConnected;
 	// }
 
-	public String getThumbnail()
+	public String getVendorThumbnail()
 	{
-		return thumbnail;
+		return vendorThumbnailUrl;
 	}
 
-	public void setThumbnail(String thumbnail)
+	public void setVendorThumbnail(String thumbnail)
 	{
-		this.thumbnail = thumbnail;
+		this.vendorThumbnailUrl = thumbnail;
+	}
+	
+	public String getModelThumbnail()
+	{
+		return modelThumbnailUrl;
+	}
+	
+	public void setModelThumbnail(String thumbnailUrl)
+	{
+		this.modelThumbnailUrl = thumbnailUrl;
 	}
 
 	// public void setEvercamConnected(int evercamConnected)
@@ -595,13 +606,14 @@ public class DiscoveredCamera implements Serializable
 		jsonOrderedMap.put("model_id", getModel());
 		jsonOrderedMap.put("lan_http_port", getHttp());
 		jsonOrderedMap.put("lan_rtsp_port", getRtsp());
-		jsonOrderedMap.put("wan_http_port", getExthttp());
-		jsonOrderedMap.put("wan_rtsp_port", getExtrtsp());
+		jsonOrderedMap.put("upnp_wan_http_port", getExthttp());
+		jsonOrderedMap.put("upnp_wan_rtsp_port", getExtrtsp());
 		jsonOrderedMap.put("default_username", getUsername());
 		jsonOrderedMap.put("default_password", getPassword());
 		jsonOrderedMap.put("http_jpg_path", getJpg());
 		jsonOrderedMap.put("rtsp_h264_path", getH264());
-		jsonOrderedMap.put("vendor_thumbnail_url", getThumbnail());
+		jsonOrderedMap.put("vendor_thumbnail_url", getVendorThumbnail());
+		jsonOrderedMap.put("model_thumbnail_url", getModelThumbnail());
 		
 		return new JSONObject(jsonOrderedMap);
 	}

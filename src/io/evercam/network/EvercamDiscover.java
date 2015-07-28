@@ -33,6 +33,7 @@ public class EvercamDiscover
 	private boolean upnpDone = false;
 	private boolean natDone = false;
 	private int countDone = 0;
+	private int queryCountDone = 0;
 	private String externalIp = "";
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
@@ -139,47 +140,19 @@ public class EvercamDiscover
 					@Override
 					public void onCameraFound(DiscoveredCamera discoveredCamera, Vendor vendor)
 					{
-						try
+						discoveredCamera.setExternalIp(externalIp);
+
+						// Add details discovered from UPnP to camera object
+						discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera,
+								deviceList);
+
+						// Add details in discovered NAT table(mainly
+						// forwarded ports)
+						discoveredCamera = mergeNatTableToCamera(discoveredCamera, mapEntries);
+
+						synchronized (cameraList)
 						{
-							discoveredCamera.setExternalIp(externalIp);
-
-							// Add details discovered from UPnP to camera object
-							discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera,
-									deviceList);
-
-							// Add details in discovered NAT table(mainly
-							// forwarded ports)
-							discoveredCamera = mergeNatTableToCamera(discoveredCamera, mapEntries);
-
-							if (withThumbnail)
-							{
-								printLogMessage("Retrieving thumbnail URL for camera " + discoveredCamera.getIP());
-								discoveredCamera.setThumbnail(EvercamQuery.getThumbnailUrlFor(
-										discoveredCamera.getVendor(), discoveredCamera.getModel()));
-							}
-
-							if (withDefaults)
-							{
-								printLogMessage("Retrieving defaults for camera " + discoveredCamera.getIP());
-								Defaults defaults = vendor.getDefaultModel().getDefaults();
-								String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
-								String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
-								String jpgUrl = defaults.getJpgURL();
-								String h264Url = defaults.getH264URL();
-								discoveredCamera.setUsername(username);
-								discoveredCamera.setPassword(password);
-								discoveredCamera.setJpg(jpgUrl);
-								discoveredCamera.setH264(h264Url);
-							}
-
-							synchronized (cameraList)
-							{
-								cameraList.add(discoveredCamera);
-							}
-						}
-						catch (EvercamException e)
-						{
-							e.printStackTrace();
+							cameraList.add(discoveredCamera);
 						}
 					}
 
@@ -194,12 +167,32 @@ public class EvercamDiscover
 
 		while (countDone != activeIpList.size())
 		{
-			printLogMessage("Identifying cameras...");
+			printLogMessage("Identifying cameras..." + countDone + '/' + activeIpList.size());
 			Thread.sleep(2000);
 		}
 		
 		//Merge ONVIF devices to discovered camera list
 		mergeOnvifDeviceListToCameraList();
+		
+		if(!pool.isShutdown())
+		{
+			for(DiscoveredCamera discoveredCamera : cameraList)
+			{
+				pool.execute(new EvercamQueryRunnable(discoveredCamera){
+					@Override
+					public void onFinished()
+					{
+						queryCountDone ++;
+						
+					}}.withDefaults(withDefaults).withThumbnail(withThumbnail));
+			}
+		}
+		
+		while (queryCountDone != cameraList.size())
+		{
+			printLogMessage("Retrieving camera defaults..." + queryCountDone + '/' + cameraList.size());
+			Thread.sleep(2000);
+		}
 		
 		pool.shutdown();
 

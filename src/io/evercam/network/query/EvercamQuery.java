@@ -114,11 +114,8 @@ public class EvercamQuery
 	 *            camera model ID for Evercam
 	 * @return If no image associated with the specified model, return logo URL
 	 *         for the specified vendor
-	 * @throws EvercamException
-	 *             if error occurred with Evercam
 	 */
 	public static String getThumbnailUrlFor(String vendorId, String modelId)
-			throws EvercamException
 	{
 		String thumbnailUrl = "";
 		if (!modelId.isEmpty())
@@ -132,22 +129,48 @@ public class EvercamQuery
 			{
 				modelId = modelId.replace(vendorId + " ", "");
 			}
+			
+			thumbnailUrl = getModelThumbnailUrl(modelId);
+		}
+
+		if (thumbnailUrl.isEmpty())
+		{
+			thumbnailUrl = getVendorThumbnailUrl(vendorId);
+		}
+		return thumbnailUrl;
+	}
+	
+	public static String getModelThumbnailUrl(String modelId)
+	{
+		if(!modelId.isEmpty())
+		{
 			try
 			{
 				Model model = Model.getById(modelId);
-				thumbnailUrl = model.getThumbnailUrl();
+				return model.getThumbnailUrl();
 			}
 			catch (EvercamException e)
 			{
 				EvercamDiscover.printLogMessage("Model " + modelId + " doesn't exist");
 			}
 		}
-
-		if (thumbnailUrl.isEmpty())
+		return "";
+	}
+	
+	public static String getVendorThumbnailUrl(String vendorId)
+	{
+		if(!vendorId.isEmpty())
 		{
-			Vendor vendor = Vendor.getById(vendorId);
-			thumbnailUrl = vendor.getLogoUrl();
+			try
+			{
+				Vendor vendor = Vendor.getById(vendorId);
+				return vendor.getLogoUrl();
+			}
+			catch (EvercamException e)
+			{
+				EvercamDiscover.printLogMessage("Vendor" + vendorId + " doesn't exist");
+			}
 		}
-		return thumbnailUrl;
+		return "";
 	}
 }
