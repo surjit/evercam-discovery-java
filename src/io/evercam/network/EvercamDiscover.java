@@ -34,8 +34,8 @@ public class EvercamDiscover
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	public ExecutorService pool;
-	public static long NAT_TIMEOUT = 10000; //10 secs
-	public static long IDENTIFICATION_TIMEOUT = 6000; //6 secs
+	public static long NAT_TIMEOUT = 5000; //5 secs
+	public static long IDENTIFICATION_TIMEOUT = 10000; //10 secs
 	public static long QUERY_TIMEOUT = 6000; //6 secs
 	
 	/**
@@ -343,18 +343,22 @@ public class EvercamDiscover
 			for(DiscoveredCamera onvifCamera : onvifDeviceList)
 			{
 				boolean matched = false;
-				for(DiscoveredCamera discoveredCamera : cameraList)
+				
+				if(cameraList.size() > 0)
 				{
-					if(discoveredCamera.getIP().equals(onvifCamera.getIP()))
+					for(DiscoveredCamera discoveredCamera : cameraList)
 					{
-						matched = true;
-						if(onvifCamera.hasModel())
+						if(discoveredCamera.getIP().equals(onvifCamera.getIP()))
 						{
-							discoveredCamera.setModel(onvifCamera.getModel());
-							discoveredCamera.setHttp(onvifCamera.getHttp());
+							matched = true;
+							if(onvifCamera.hasModel())
+							{
+								discoveredCamera.setModel(onvifCamera.getModel());
+								discoveredCamera.setHttp(onvifCamera.getHttp());
+							}
+								
+							break;
 						}
-							
-						break;
 					}
 				}
 				

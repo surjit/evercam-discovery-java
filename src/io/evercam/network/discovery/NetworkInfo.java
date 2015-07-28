@@ -146,27 +146,27 @@ public class NetworkInfo
 		return null;
 	}
 
-	// /**
-	// * Return the network prefix length. Return 0 if no CIDR detected.
-	// * FIXME: This method may return -1, which means it may not be the right
-	// approach
-	// */
-	// public static int getCidrFromInterface(NetworkInterface networkInterface)
-	// throws IOException
-	// {
-	// for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-	// {
-	// InetAddress inetAddress = address.getAddress();
-	// if (!inetAddress.isLoopbackAddress())
-	// {
-	// if (inetAddress instanceof Inet4Address)
-	// {
-	// return address.getNetworkPrefixLength();
-	// }
-	// }
-	// }
-	// return 0;
-	// }
+	 /**
+	 * Return the network prefix length. Return 0 if no CIDR detected.
+	 * FIXME: This method may return -1, which means it may not be the right
+	 approach
+	 */
+	 public static int getCidrFromInterface(NetworkInterface networkInterface)
+	 throws IOException
+	 {
+	 for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+	 {
+	 InetAddress inetAddress = address.getAddress();
+	 if (!inetAddress.isLoopbackAddress())
+	 {
+	 if (inetAddress instanceof Inet4Address)
+	 {
+	 return address.getNetworkPrefixLength();
+	 }
+	 }
+	 }
+	 return 0;
+	 }
 
 	/**
 	 * Return the valid ipv4 address for the given network interface. Return
@@ -190,7 +190,7 @@ public class NetworkInfo
 
 	public static String getExternalIP()
 	{
-		String extIP = null;
+		String extIP = "";
 		HttpClient httpclient = new DefaultHttpClient();
 		httpclient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 2000);
 		httpclient.getParams().setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 2000);
@@ -213,7 +213,7 @@ public class NetworkInfo
 		{
 			httpclient.getConnectionManager().shutdown();
 		}
-		return (extIP == null ? null : extIP.replace("\n", ""));
+		return (extIP == "" ? "" : extIP.replace("\n", ""));
 	}
 
 	/**
@@ -227,6 +227,7 @@ public class NetworkInfo
 	 * Return router IP in Linux system. Return empty string if exception
 	 * occurred.
 	 */
+	//FIXME: netstat -rn doesn't work when Internet is not connected
 	public static String getLinuxRouterIp()
 	{
 		try

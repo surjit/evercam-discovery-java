@@ -1,9 +1,11 @@
 package io.evercam.network;
 
 import io.evercam.network.discovery.DiscoveredCamera;
+import io.evercam.network.discovery.IpTranslator;
 import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
 
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -47,8 +49,20 @@ public class Main
 
 		String routerIp = NetworkInfo.getLinuxRouterIp();
 		String subnetMask = NetworkInfo.getLinuxSubnetMask();
-
-		EvercamDiscover.printLogMessage("Network router IP: " + routerIp + " subnet mask: "
+		
+//		String deviceIp = "";
+//		String subnetMask = "";
+//		try
+//		{
+//		NetworkInterface networkInterface = NetworkInfo.getNetworkInterfaceByName("wlan0");
+//		deviceIp = NetworkInfo.getIpFromInterface(networkInterface);
+//		subnetMask = IpTranslator.cidrToMask(NetworkInfo.getCidrFromInterface(networkInterface));
+//		}
+//		catch (Exception e)
+//		{
+//			// TODO: handle exception
+//		}
+		EvercamDiscover.printLogMessage("Router IP address: " + routerIp + " subnet mask: "
 				+ subnetMask);
 		EvercamDiscover.printLogMessage("Scanning...");
 
