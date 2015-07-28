@@ -1,8 +1,5 @@
 package io.evercam.network;
 
-import io.evercam.Auth;
-import io.evercam.Defaults;
-import io.evercam.EvercamException;
 import io.evercam.Vendor;
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.IpScan;
@@ -11,7 +8,6 @@ import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
 import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
-import io.evercam.network.query.EvercamQuery;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +34,10 @@ public class EvercamDiscover
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	public ExecutorService pool;
-
+	public static long NAT_TIMEOUT = 10000; //10 secs
+	public static long IDENTIFICATION_TIMEOUT = 6000; //6 secs
+	public static long QUERY_TIMEOUT = 6000; //6 secs
+	
 	/**
 	 * Include camera thumbnail in the scanning result or not
 	 * 
@@ -123,10 +122,20 @@ public class EvercamDiscover
 		});
 		ipScan.scanAll(scanRange);
 
+		long natWaitingTime = 0;
 		while (!upnpDone || !natDone)
 		{
-			printLogMessage("Waiting for UPnP & NAT discovery...");
-			Thread.sleep(500);
+			if(natWaitingTime < NAT_TIMEOUT)
+			{
+				printLogMessage("Waiting for UPnP & NAT discovery...");
+				Thread.sleep(500);
+				natWaitingTime += 500;
+			}
+			else
+			{
+				printLogMessage("UPnP & NAT discovery timeout.");
+				break;
+			}
 		}
 
 		printLogMessage("Identifying cameras......");
@@ -165,10 +174,20 @@ public class EvercamDiscover
 			}
 		}
 
+		long identificationWaitingTime = 0;
 		while (countDone != activeIpList.size())
 		{
-			printLogMessage("Identifying cameras..." + countDone + '/' + activeIpList.size());
-			Thread.sleep(2000);
+		    if(identificationWaitingTime < IDENTIFICATION_TIMEOUT)
+		    {
+				printLogMessage("Identifying cameras..." + countDone + '/' + activeIpList.size());
+				Thread.sleep(2000);
+				identificationWaitingTime += 2000;
+		    }
+		    else
+		    {
+		    	printLogMessage("Camera identification timeout.");
+		    	break;
+		    }
 		}
 		
 		//Merge ONVIF devices to discovered camera list
@@ -188,10 +207,20 @@ public class EvercamDiscover
 			}
 		}
 		
+		long queryWaitingTime = 0;
 		while (queryCountDone != cameraList.size())
 		{
-			printLogMessage("Retrieving camera defaults..." + queryCountDone + '/' + cameraList.size());
-			Thread.sleep(2000);
+			if(queryWaitingTime < QUERY_TIMEOUT)
+			{
+				printLogMessage("Retrieving camera defaults..." + queryCountDone + '/' + cameraList.size());
+				Thread.sleep(2000);
+				queryWaitingTime += 2000;
+			}
+			else 
+			{
+				printLogMessage("Evercam query timeout.");
+				break;
+			}
 		}
 		
 		pool.shutdown();
