@@ -12,12 +12,12 @@ public abstract class EvercamQueryRunnable implements Runnable
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	private DiscoveredCamera discoveredCamera;
-	
+
 	public EvercamQueryRunnable(DiscoveredCamera discoveredCamera)
 	{
 		this.discoveredCamera = discoveredCamera;
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -25,17 +25,20 @@ public abstract class EvercamQueryRunnable implements Runnable
 		{
 			if (withThumbnail)
 			{
-				EvercamDiscover.printLogMessage("Retrieving thumbnail URL for camera " + discoveredCamera.getIP());
-				discoveredCamera.setVendorThumbnail(EvercamQuery.getVendorThumbnailUrl(
-						discoveredCamera.getVendor()));
-				discoveredCamera.setModelThumbnail(EvercamQuery.getModelThumbnailUrl(
-						discoveredCamera.getModel()));
+				EvercamDiscover.printLogMessage("Retrieving thumbnail URL for camera "
+						+ discoveredCamera.getIP());
+				discoveredCamera.setVendorThumbnail(EvercamQuery
+						.getVendorThumbnailUrl(discoveredCamera.getVendor()));
+				discoveredCamera.setModelThumbnail(EvercamQuery
+						.getModelThumbnailUrl(discoveredCamera.getModel()));
 			}
-	
+
 			if (withDefaults)
 			{
-				EvercamDiscover.printLogMessage("Retrieving defaults for camera " + discoveredCamera.getIP());
-				Defaults defaults = Vendor.getById(discoveredCamera.getVendor()).getDefaultModel().getDefaults();
+				EvercamDiscover.printLogMessage("Retrieving defaults for camera "
+						+ discoveredCamera.getIP());
+				Defaults defaults = Vendor.getById(discoveredCamera.getVendor()).getDefaultModel()
+						.getDefaults();
 				String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
 				String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
 				String jpgUrl = defaults.getJpgURL();
@@ -48,26 +51,26 @@ public abstract class EvercamQueryRunnable implements Runnable
 		}
 		catch (EvercamException e)
 		{
-			if(Constants.ENABLE_LOGGING)
+			if (Constants.ENABLE_LOGGING)
 			{
 				e.printStackTrace();
 			}
 		}
-		
+
 		onFinished();
 	}
-	
+
 	public EvercamQueryRunnable withThumbnail(boolean withThumbnail)
 	{
 		this.withThumbnail = withThumbnail;
 		return this;
 	}
-	
+
 	public EvercamQueryRunnable withDefaults(boolean withDefaults)
 	{
 		this.withDefaults = withDefaults;
 		return this;
 	}
-	
+
 	public abstract void onFinished();
 }

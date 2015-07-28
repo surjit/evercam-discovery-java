@@ -34,10 +34,10 @@ public class EvercamDiscover
 	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	public ExecutorService pool;
-	public static long NAT_TIMEOUT = 5000; //5 secs
-	public static long IDENTIFICATION_TIMEOUT = 10000; //10 secs
-	public static long QUERY_TIMEOUT = 6000; //6 secs
-	
+	public static long NAT_TIMEOUT = 5000; // 5 secs
+	public static long IDENTIFICATION_TIMEOUT = 10000; // 10 secs
+	public static long QUERY_TIMEOUT = 6000; // 6 secs
+
 	/**
 	 * Include camera thumbnail in the scanning result or not
 	 * 
@@ -103,7 +103,7 @@ public class EvercamDiscover
 			});
 			printLogMessage("Discovering NAT table......");
 		}
-		
+
 		// Scan to get a list of active IP addresses.
 		IpScan ipScan = new IpScan(new ScanResult()
 		{
@@ -125,7 +125,7 @@ public class EvercamDiscover
 		long natWaitingTime = 0;
 		while (!upnpDone || !natDone)
 		{
-			if(natWaitingTime < NAT_TIMEOUT)
+			if (natWaitingTime < NAT_TIMEOUT)
 			{
 				printLogMessage("Waiting for UPnP & NAT discovery...");
 				Thread.sleep(500);
@@ -152,8 +152,7 @@ public class EvercamDiscover
 						discoveredCamera.setExternalIp(externalIp);
 
 						// Add details discovered from UPnP to camera object
-						discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera,
-								deviceList);
+						discoveredCamera = mergeUpnpDevicesToCamera(discoveredCamera, deviceList);
 
 						// Add details in discovered NAT table(mainly
 						// forwarded ports)
@@ -177,52 +176,55 @@ public class EvercamDiscover
 		long identificationWaitingTime = 0;
 		while (countDone != activeIpList.size())
 		{
-		    if(identificationWaitingTime < IDENTIFICATION_TIMEOUT)
-		    {
+			if (identificationWaitingTime < IDENTIFICATION_TIMEOUT)
+			{
 				printLogMessage("Identifying cameras..." + countDone + '/' + activeIpList.size());
 				Thread.sleep(2000);
 				identificationWaitingTime += 2000;
-		    }
-		    else
-		    {
-		    	printLogMessage("Camera identification timeout.");
-		    	break;
-		    }
-		}
-		
-		//Merge ONVIF devices to discovered camera list
-		mergeOnvifDeviceListToCameraList();
-		
-		if(!pool.isShutdown())
-		{
-			for(DiscoveredCamera discoveredCamera : cameraList)
+			}
+			else
 			{
-				pool.execute(new EvercamQueryRunnable(discoveredCamera){
+				printLogMessage("Camera identification timeout.");
+				break;
+			}
+		}
+
+		// Merge ONVIF devices to discovered camera list
+		mergeOnvifDeviceListToCameraList();
+
+		if (!pool.isShutdown())
+		{
+			for (DiscoveredCamera discoveredCamera : cameraList)
+			{
+				pool.execute(new EvercamQueryRunnable(discoveredCamera)
+				{
 					@Override
 					public void onFinished()
 					{
-						queryCountDone ++;
-						
-					}}.withDefaults(withDefaults).withThumbnail(withThumbnail));
+						queryCountDone++;
+
+					}
+				}.withDefaults(withDefaults).withThumbnail(withThumbnail));
 			}
 		}
-		
+
 		long queryWaitingTime = 0;
 		while (queryCountDone != cameraList.size())
 		{
-			if(queryWaitingTime < QUERY_TIMEOUT)
+			if (queryWaitingTime < QUERY_TIMEOUT)
 			{
-				printLogMessage("Retrieving camera defaults..." + queryCountDone + '/' + cameraList.size());
+				printLogMessage("Retrieving camera defaults..." + queryCountDone + '/'
+						+ cameraList.size());
 				Thread.sleep(2000);
 				queryWaitingTime += 2000;
 			}
-			else 
+			else
 			{
 				printLogMessage("Evercam query timeout.");
 				break;
 			}
 		}
-		
+
 		pool.shutdown();
 
 		try
@@ -279,7 +281,7 @@ public class EvercamDiscover
 		}
 		catch (Exception e)
 		{
-			printLogMessage("Exception while merging UPnP device: " +e.getStackTrace().toString());
+			printLogMessage("Exception while merging UPnP device: " + e.getStackTrace().toString());
 		}
 		return camera;
 	}
@@ -298,7 +300,7 @@ public class EvercamDiscover
 		{
 			camera.setExtrtsp(natExternalPort);
 		}
-		
+
 		return camera;
 	}
 
@@ -335,34 +337,34 @@ public class EvercamDiscover
 			onvifDeviceList.add(discoveredCamera);
 		}
 	};
-	
+
 	public void mergeOnvifDeviceListToCameraList()
 	{
-		if(onvifDeviceList.size() > 0)
+		if (onvifDeviceList.size() > 0)
 		{
-			for(DiscoveredCamera onvifCamera : onvifDeviceList)
+			for (DiscoveredCamera onvifCamera : onvifDeviceList)
 			{
 				boolean matched = false;
-				
-				if(cameraList.size() > 0)
+
+				if (cameraList.size() > 0)
 				{
-					for(DiscoveredCamera discoveredCamera : cameraList)
+					for (DiscoveredCamera discoveredCamera : cameraList)
 					{
-						if(discoveredCamera.getIP().equals(onvifCamera.getIP()))
+						if (discoveredCamera.getIP().equals(onvifCamera.getIP()))
 						{
 							matched = true;
-							if(onvifCamera.hasModel())
+							if (onvifCamera.hasModel())
 							{
 								discoveredCamera.setModel(onvifCamera.getModel());
 								discoveredCamera.setHttp(onvifCamera.getHttp());
 							}
-								
+
 							break;
 						}
 					}
 				}
-				
-				if(!matched)
+
+				if (!matched)
 				{
 					cameraList.add(onvifCamera);
 				}
@@ -390,15 +392,16 @@ public class EvercamDiscover
 			printLogMessage("Found UPnP device: " + upnpDevice.getIp());
 		}
 	};
-	
+
 	/**
 	 * Only print the logging message when logging is enabled
 	 * 
-	 * @param message The logging message to be printed in console
+	 * @param message
+	 *            The logging message to be printed in console
 	 */
 	public static void printLogMessage(String message)
 	{
-		if(Constants.ENABLE_LOGGING)
+		if (Constants.ENABLE_LOGGING)
 		{
 			System.out.println(message);
 		}

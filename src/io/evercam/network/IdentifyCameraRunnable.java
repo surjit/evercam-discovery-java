@@ -31,7 +31,8 @@ public abstract class IdentifyCameraRunnable implements Runnable
 					String vendorId = vendor.getId();
 					if (!vendorId.isEmpty())
 					{
-						EvercamDiscover.printLogMessage(ip + " is identified as a camera, vendor is: " + vendorId);
+						EvercamDiscover.printLogMessage(ip
+								+ " is identified as a camera, vendor is: " + vendorId);
 						// Then fill details discovered from IP scan
 						DiscoveredCamera camera = new DiscoveredCamera(ip);
 						camera.setMAC(macAddress);
@@ -46,7 +47,7 @@ public abstract class IdentifyCameraRunnable implements Runnable
 						{
 							camera = camera.mergePorts(activePortList);
 						}
-						
+
 						onCameraFound(camera, vendor);
 					}
 				}
@@ -54,7 +55,7 @@ public abstract class IdentifyCameraRunnable implements Runnable
 		}
 		catch (Exception e)
 		{
-			if(Constants.ENABLE_LOGGING)
+			if (Constants.ENABLE_LOGGING)
 			{
 				e.printStackTrace();
 			}

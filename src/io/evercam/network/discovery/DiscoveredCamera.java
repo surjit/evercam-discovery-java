@@ -376,12 +376,12 @@ public class DiscoveredCamera implements Serializable
 	{
 		this.vendorThumbnailUrl = thumbnail;
 	}
-	
+
 	public String getModelThumbnail()
 	{
 		return modelThumbnailUrl;
 	}
-	
+
 	public void setModelThumbnail(String thumbnailUrl)
 	{
 		this.modelThumbnailUrl = thumbnailUrl;
@@ -593,11 +593,11 @@ public class DiscoveredCamera implements Serializable
 
 		return this;
 	}
-	
+
 	public JSONObject toJsonObject()
 	{
 		LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
-		
+
 		jsonOrderedMap.put("lan_ip", getIP());
 		jsonOrderedMap.put("friendly_name", getName());
 		jsonOrderedMap.put("mac_address", getMAC());
@@ -614,7 +614,7 @@ public class DiscoveredCamera implements Serializable
 		jsonOrderedMap.put("rtsp_h264_path", getH264());
 		jsonOrderedMap.put("vendor_thumbnail_url", getVendorThumbnail());
 		jsonOrderedMap.put("model_thumbnail_url", getModelThumbnail());
-		
+
 		return new JSONObject(jsonOrderedMap);
 	}
 }

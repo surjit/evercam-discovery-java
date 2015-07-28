@@ -146,27 +146,25 @@ public class NetworkInfo
 		return null;
 	}
 
-	 /**
-	 * Return the network prefix length. Return 0 if no CIDR detected.
-	 * FIXME: This method may return -1, which means it may not be the right
-	 approach
+	/**
+	 * Return the network prefix length. Return 0 if no CIDR detected. FIXME:
+	 * This method may return -1, which means it may not be the right approach
 	 */
-	 public static int getCidrFromInterface(NetworkInterface networkInterface)
-	 throws IOException
-	 {
-	 for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
-	 {
-	 InetAddress inetAddress = address.getAddress();
-	 if (!inetAddress.isLoopbackAddress())
-	 {
-	 if (inetAddress instanceof Inet4Address)
-	 {
-	 return address.getNetworkPrefixLength();
-	 }
-	 }
-	 }
-	 return 0;
-	 }
+	public static int getCidrFromInterface(NetworkInterface networkInterface) throws IOException
+	{
+		for (InterfaceAddress address : networkInterface.getInterfaceAddresses())
+		{
+			InetAddress inetAddress = address.getAddress();
+			if (!inetAddress.isLoopbackAddress())
+			{
+				if (inetAddress instanceof Inet4Address)
+				{
+					return address.getNetworkPrefixLength();
+				}
+			}
+		}
+		return 0;
+	}
 
 	/**
 	 * Return the valid ipv4 address for the given network interface. Return
@@ -219,15 +217,14 @@ public class NetworkInfo
 	/**
 	 * Run command 'netstat -rn' and abstract router IP
 	 * 
-	 * Example of Kernel IP routing table 
-	 * Destination Gateway Genmask Flags MSS Window irtt Iface 
-	 * 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 
-	 * 192.168.1.0 0.0.0.0 255.255.255.0 U 0 0 0 eth0
+	 * Example of Kernel IP routing table Destination Gateway Genmask Flags MSS
+	 * Window irtt Iface 0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0 192.168.1.0
+	 * 0.0.0.0 255.255.255.0 U 0 0 0 eth0
 	 * 
 	 * Return router IP in Linux system. Return empty string if exception
 	 * occurred.
 	 */
-	//FIXME: netstat -rn doesn't work when Internet is not connected
+	// FIXME: netstat -rn doesn't work when Internet is not connected
 	public static String getLinuxRouterIp()
 	{
 		try
@@ -253,7 +250,7 @@ public class NetworkInfo
 		}
 		catch (Exception e)
 		{
-			if(Constants.ENABLE_LOGGING)
+			if (Constants.ENABLE_LOGGING)
 			{
 				e.printStackTrace();
 			}
@@ -295,7 +292,7 @@ public class NetworkInfo
 		}
 		catch (Exception e)
 		{
-			if(Constants.ENABLE_LOGGING)
+			if (Constants.ENABLE_LOGGING)
 			{
 				e.printStackTrace();
 			}

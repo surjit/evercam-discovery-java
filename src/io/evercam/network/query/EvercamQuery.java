@@ -33,7 +33,7 @@ public class EvercamQuery
 		}
 		catch (EvercamException e)
 		{
-			if(Constants.ENABLE_LOGGING)
+			if (Constants.ENABLE_LOGGING)
 			{
 				e.printStackTrace();
 			}
@@ -129,7 +129,7 @@ public class EvercamQuery
 			{
 				modelId = modelId.replace(vendorId + " ", "");
 			}
-			
+
 			thumbnailUrl = getModelThumbnailUrl(modelId);
 		}
 
@@ -139,10 +139,10 @@ public class EvercamQuery
 		}
 		return thumbnailUrl;
 	}
-	
+
 	public static String getModelThumbnailUrl(String modelId)
 	{
-		if(!modelId.isEmpty())
+		if (!modelId.isEmpty())
 		{
 			try
 			{
@@ -156,10 +156,10 @@ public class EvercamQuery
 		}
 		return "";
 	}
-	
+
 	public static String getVendorThumbnailUrl(String vendorId)
 	{
-		if(!vendorId.isEmpty())
+		if (!vendorId.isEmpty())
 		{
 			try
 			{
