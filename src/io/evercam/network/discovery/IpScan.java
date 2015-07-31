@@ -1,5 +1,7 @@
 package io.evercam.network.discovery;
 
+import io.evercam.network.Constants;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -102,11 +104,17 @@ public class IpScan
 		}
 		catch (UnknownHostException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			};
 		}
 		scanResult.onIpScanned(ip);
 	}

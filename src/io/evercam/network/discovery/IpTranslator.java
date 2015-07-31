@@ -1,5 +1,7 @@
 package io.evercam.network.discovery;
 
+import io.evercam.network.Constants;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -68,7 +70,10 @@ public class IpTranslator
 		}
 		catch (UnknownHostException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		return EMPTY_IP;

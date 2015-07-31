@@ -25,7 +25,10 @@ public abstract class NatRunnable implements Runnable
 		catch (Exception e)
 		{
 			onFinished(null);
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

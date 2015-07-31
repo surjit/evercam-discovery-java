@@ -83,7 +83,10 @@ public class Main
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 			EvercamDiscover.printLogMessage("On error: 1");
 			System.exit(1);
 		}

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public abstract class UpnpRunnable implements Runnable
 {
+	
 	@Override
 	public void run()
 	{
@@ -27,7 +28,10 @@ public abstract class UpnpRunnable implements Runnable
 		catch (Exception e)
 		{
 			onFinished(null);
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

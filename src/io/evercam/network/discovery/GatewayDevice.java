@@ -1,5 +1,7 @@
 package io.evercam.network.discovery;
 
+import io.evercam.network.Constants;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -37,7 +39,10 @@ public class GatewayDevice
 					if (url.contains(routerIP))
 					{
 						IGD = testIGD;
-						tableSize = IGD.getNatTableSize();
+						if(IGD != null)
+						{
+							tableSize = IGD.getNatTableSize();
+						}
 						isRouter = true;
 					}
 					else
@@ -49,11 +54,17 @@ public class GatewayDevice
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		catch (UPNPResponseException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -70,14 +81,7 @@ public class GatewayDevice
 	// Is UPnP enabled on router?
 	public boolean isUPnPAvaliable()
 	{
-		if (IGD != null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return IGD != null;
 	}
 
 	// get NAT mapped entity for specific IP
@@ -98,11 +102,17 @@ public class GatewayDevice
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				if(Constants.ENABLE_LOGGING)
+				{
+					e.printStackTrace();
+				}
 			}
 			catch (UPNPResponseException e)
 			{
-				e.printStackTrace();
+				if(Constants.ENABLE_LOGGING)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		return matchedEntrys;
@@ -132,13 +142,17 @@ public class GatewayDevice
 			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(Constants.ENABLE_LOGGING)
+				{
+					e.printStackTrace();
+				}
 			}
 			catch (UPNPResponseException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(Constants.ENABLE_LOGGING)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		return mapEntries;

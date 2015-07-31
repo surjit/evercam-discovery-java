@@ -1,5 +1,7 @@
 package io.evercam.network.discovery;
 
+import io.evercam.network.Constants;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -51,7 +53,10 @@ public class UpnpDiscovery
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 

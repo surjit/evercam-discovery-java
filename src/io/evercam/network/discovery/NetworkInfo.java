@@ -57,7 +57,10 @@ public class NetworkInfo
 		}
 		catch (SocketException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		return interfaceNameArrayList;
 	}
@@ -99,7 +102,10 @@ public class NetworkInfo
 		}
 		catch (SocketException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -141,7 +147,10 @@ public class NetworkInfo
 		}
 		catch (SocketException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -205,7 +214,10 @@ public class NetworkInfo
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			if(Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
 		}
 		finally
 		{
