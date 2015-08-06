@@ -71,7 +71,7 @@ public class Main
 			ScanRange scanRange = new ScanRange(routerIp, subnetMask);
 
 			ArrayList<DiscoveredCamera> cameraList = new EvercamDiscover().withDefaults(true)
-					.withThumbnail(true).discoverAllLinux(scanRange);
+					.discoverAllLinux(scanRange);
 
 			EvercamDiscover.printLogMessage("Scanning finished, found " + cameraList.size()
 					+ " cameras");

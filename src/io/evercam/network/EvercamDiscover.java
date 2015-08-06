@@ -31,7 +31,6 @@ public class EvercamDiscover
 	private int countDone = 0;
 	private int queryCountDone = 0;
 	private String externalIp = "";
-	private boolean withThumbnail = false;
 	private boolean withDefaults = false;
 	public ExecutorService pool;
 	public static long NAT_TIMEOUT = 5000; // 5 secs
@@ -39,22 +38,10 @@ public class EvercamDiscover
 	public static long QUERY_TIMEOUT = 6000; // 6 secs
 
 	/**
-	 * Include camera thumbnail in the scanning result or not
-	 * 
-	 * @param withThumbnail
-	 *            true if include camera thumbnail
-	 */
-	public EvercamDiscover withThumbnail(boolean withThumbnail)
-	{
-		this.withThumbnail = withThumbnail;
-		return this;
-	}
-
-	/**
-	 * Include camera defaults(username, password,URL) in the scanning result or
+	 * Include camera defaults(username, password, paths, and thumbnail URLs) in the scanning result or
 	 * not
 	 * 
-	 * @param withThumbnail
+	 * @param withDefaults
 	 *            true if include camera defaults
 	 */
 	public EvercamDiscover withDefaults(boolean withDefaults)
@@ -204,7 +191,7 @@ public class EvercamDiscover
 						queryCountDone++;
 
 					}
-				}.withDefaults(withDefaults).withThumbnail(withThumbnail));
+				}.withDefaults(withDefaults));
 			}
 		}
 

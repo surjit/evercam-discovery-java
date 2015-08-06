@@ -454,6 +454,11 @@ public class DiscoveredCamera implements Serializable
 		}
 		return false;
 	}
+	
+	public boolean hasModelThumbnailUrl()
+	{
+		return !getModelThumbnail().isEmpty();
+	}
 
 	public boolean hasMac()
 	{
