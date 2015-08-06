@@ -604,10 +604,10 @@ public class DiscoveredCamera implements Serializable
 		jsonOrderedMap.put("wan_ip", getExternalIp());
 		jsonOrderedMap.put("vendor_id", getVendor());
 		jsonOrderedMap.put("model_id", getModel());
-		jsonOrderedMap.put("lan_http_port", getHttp());
-		jsonOrderedMap.put("lan_rtsp_port", getRtsp());
-		jsonOrderedMap.put("upnp_wan_http_port", getExthttp());
-		jsonOrderedMap.put("upnp_wan_rtsp_port", getExtrtsp());
+		jsonOrderedMap.put("lan_http_port", hasHTTP() ? getHttp() : JSONObject.NULL);
+		jsonOrderedMap.put("lan_rtsp_port", hasRTSP() ? getRtsp() : JSONObject.NULL);
+		jsonOrderedMap.put("upnp_wan_http_port", hasExternalHttp() ? getExthttp() : JSONObject.NULL);
+		jsonOrderedMap.put("upnp_wan_rtsp_port", hasExternalRtsp() ? getExtrtsp() : JSONObject.NULL);
 		jsonOrderedMap.put("default_username", getUsername());
 		jsonOrderedMap.put("default_password", getPassword());
 		jsonOrderedMap.put("http_jpg_path", getJpg());
