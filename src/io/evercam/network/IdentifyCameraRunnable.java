@@ -20,6 +20,7 @@ public abstract class IdentifyCameraRunnable implements Runnable
 	@Override
 	public void run()
 	{
+		EvercamDiscover.printLogMessage("Identifying : " + ip);
 		try
 		{
 			String macAddress = MacAddress.getByIpLinux(ip);
@@ -60,6 +61,8 @@ public abstract class IdentifyCameraRunnable implements Runnable
 				e.printStackTrace();
 			}
 		}
+		
+		EvercamDiscover.printLogMessage("Identification finished:  " + ip);
 
 		onFinished();
 	}

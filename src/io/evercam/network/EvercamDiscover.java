@@ -3,6 +3,7 @@ package io.evercam.network;
 import io.evercam.Vendor;
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.IpScan;
+import io.evercam.network.discovery.MacAddress;
 import io.evercam.network.discovery.NatMapEntry;
 import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
@@ -10,6 +11,7 @@ import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +36,8 @@ public class EvercamDiscover
 	private boolean withDefaults = false;
 	public ExecutorService pool;
 	public static long NAT_TIMEOUT = 5000; // 5 secs
-	public static long IDENTIFICATION_TIMEOUT = 10000; // 10 secs
-	public static long QUERY_TIMEOUT = 6000; // 6 secs
+	public static long IDENTIFICATION_TIMEOUT = 16000; // 16 secs
+	public static long QUERY_TIMEOUT = 12000; // 12 secs
 
 	/**
 	 * Include camera defaults(username, password, paths, and thumbnail URLs) in the scanning result or
@@ -115,8 +117,8 @@ public class EvercamDiscover
 			if (natWaitingTime < NAT_TIMEOUT)
 			{
 				printLogMessage("Waiting for UPnP & NAT discovery...");
-				Thread.sleep(500);
-				natWaitingTime += 500;
+				Thread.sleep(2000);
+				natWaitingTime += 2000;
 			}
 			else
 			{
@@ -166,8 +168,8 @@ public class EvercamDiscover
 			if (identificationWaitingTime < IDENTIFICATION_TIMEOUT)
 			{
 				printLogMessage("Identifying cameras..." + countDone + '/' + activeIpList.size());
-				Thread.sleep(2000);
-				identificationWaitingTime += 2000;
+				Thread.sleep(4000);
+				identificationWaitingTime += 4000;
 			}
 			else
 			{
@@ -202,8 +204,8 @@ public class EvercamDiscover
 			{
 				printLogMessage("Retrieving camera defaults..." + queryCountDone + '/'
 						+ cameraList.size());
-				Thread.sleep(2000);
-				queryWaitingTime += 2000;
+				Thread.sleep(4000);
+				queryWaitingTime += 4000;
 			}
 			else
 			{
@@ -226,6 +228,10 @@ public class EvercamDiscover
 			pool.shutdownNow();
 			Thread.currentThread().interrupt();
 		}
+		
+		mergeDuplicateCameraFromList(cameraList);
+		//Query ARP table again if MAC address is still empty after merging
+		fillMacAddressIfNotExist(cameraList);
 
 		return cameraList;
 	}
@@ -306,6 +312,56 @@ public class EvercamDiscover
 			}
 		}
 		return camera;
+	}
+	
+	/**
+	 * Review the camera list and merge cameras with the same IP address
+	 * 
+	 * @param the re-organized camera list
+	 */
+	public static void mergeDuplicateCameraFromList(ArrayList<DiscoveredCamera> cameraList)
+	{
+		boolean duplicate = false;
+		do
+		{
+			duplicate = false;
+			int listSize = cameraList.size();
+			outsideLoop: for (int index1 = 0 ; index1 < listSize ; index1 ++)
+			{
+				String ip1 = cameraList.get(index1).getIP();
+				
+				for(int index2 = index1 + 1; index2 < listSize ; index2 ++)
+				{
+					String ip2 = cameraList.get(index2).getIP();
+					if(ip1.equals(ip2))
+					{
+						duplicate = true;
+						
+						//Merge camera object on the original list
+						cameraList.get(index1).merge(cameraList.get(index2));
+					
+						//Remove camera from the original list
+						cameraList.remove(index2);
+						
+						break outsideLoop;
+					}
+				}
+			}
+		} while (duplicate);
+	}
+	
+	/**
+	 * If MAC address doesn't exist in camera object, query ARP table again
+	 */
+	public static void fillMacAddressIfNotExist(ArrayList<DiscoveredCamera> cameraList)
+	{
+		for(DiscoveredCamera camera : cameraList)
+		{
+			if(!camera.hasMac())
+			{
+				camera.setMAC(MacAddress.getByIpLinux(camera.getIP()));
+			}
+		}
 	}
 
 	private OnvifRunnable onvifRunnable = new OnvifRunnable()
