@@ -11,7 +11,8 @@ import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -229,7 +230,7 @@ public class EvercamDiscover
 			Thread.currentThread().interrupt();
 		}
 		
-		mergeDuplicateCameraFromList(cameraList);
+		cameraList = mergeDuplicateCameraFromList(cameraList);
 		//Query ARP table again if MAC address is still empty after merging
 		fillMacAddressIfNotExist(cameraList);
 
@@ -319,36 +320,23 @@ public class EvercamDiscover
 	 * 
 	 * @param the re-organized camera list
 	 */
-	public static void mergeDuplicateCameraFromList(ArrayList<DiscoveredCamera> cameraList)
-	{
-		boolean duplicate = false;
-		do
-		{
-			duplicate = false;
-			int listSize = cameraList.size();
-			outsideLoop: for (int index1 = 0 ; index1 < listSize ; index1 ++)
-			{
-				String ip1 = cameraList.get(index1).getIP();
-				
-				for(int index2 = index1 + 1; index2 < listSize ; index2 ++)
-				{
-					String ip2 = cameraList.get(index2).getIP();
-					if(ip1.equals(ip2))
-					{
-						duplicate = true;
-						
-						//Merge camera object on the original list
-						cameraList.get(index1).merge(cameraList.get(index2));
-					
-						//Remove camera from the original list
-						cameraList.remove(index2);
-						
-						break outsideLoop;
-					}
-				}
-			}
-		} while (duplicate);
-	}
+    public static ArrayList<DiscoveredCamera> mergeDuplicateCameraFromList(ArrayList<DiscoveredCamera> cameraList) 
+    {
+        Map<String, DiscoveredCamera> cameraHashMap = new HashMap<>();
+        for (DiscoveredCamera camera: cameraList) 
+        {
+            String ip = camera.getIP();
+            DiscoveredCamera tempCamera = cameraHashMap.get(ip);
+            if (tempCamera == null) 
+            {
+                tempCamera = new DiscoveredCamera(ip);
+                cameraHashMap.put(ip, tempCamera);
+            }
+            tempCamera.merge(camera);
+        }
+
+       return new ArrayList<>(cameraHashMap.values());
+    }
 	
 	/**
 	 * If MAC address doesn't exist in camera object, query ARP table again

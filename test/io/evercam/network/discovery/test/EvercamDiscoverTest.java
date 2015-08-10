@@ -30,9 +30,9 @@ public class EvercamDiscoverTest
 		cameraList.add(camera3);
 		cameraList.add(camera4);
 		
-		EvercamDiscover.mergeDuplicateCameraFromList(cameraList);
-		assertEquals(2, cameraList.size());
-		for(DiscoveredCamera camera : cameraList)
+		ArrayList<DiscoveredCamera> mergedCameraList = EvercamDiscover.mergeDuplicateCameraFromList(cameraList);
+		assertEquals(2, mergedCameraList.size());
+		for(DiscoveredCamera camera : mergedCameraList)
 		{
 			System.out.println(camera.toJsonObject().toString());
 		}
