@@ -459,6 +459,11 @@ public class DiscoveredCamera implements Serializable
 	{
 		return !getModelThumbnail().isEmpty();
 	}
+	
+	public boolean hasVendorThumbnailUrl()
+	{
+		return !getVendorThumbnail().isEmpty();
+	}
 
 	public boolean hasMac()
 	{
@@ -472,24 +477,6 @@ public class DiscoveredCamera implements Serializable
 	public boolean hasVendor()
 	{
 		if (getVendor() != null && !getVendor().equals(""))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public boolean hasUsername()
-	{
-		if (getUsername() != null && !getUsername().isEmpty())
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public boolean hasPassword()
-	{
-		if (getPassword() != null && !getPassword().isEmpty())
 		{
 			return true;
 		}
@@ -541,6 +528,16 @@ public class DiscoveredCamera implements Serializable
 	{
 		return IpTranslator.isValidIpv4Addr(getIP());
 	}
+	
+	public boolean hasPassword()
+	{
+		return getPassword() != null;
+	}
+	
+	public boolean hasUsername()
+	{
+		return getUsername() != null;
+	}
 
 	/**
 	 * Merge camera 2 to camera 1, the values in cameras will be kept.
@@ -578,6 +575,34 @@ public class DiscoveredCamera implements Serializable
 		if (discoveredCamera.hasName())
 		{
 			setName(discoveredCamera.getName());
+		}
+		if(discoveredCamera.hasExternalIp())
+		{
+			setExternalIp(discoveredCamera.getExternalIp());
+		}
+		if(discoveredCamera.hasUsername())
+		{
+			setUsername(discoveredCamera.getUsername());
+		}
+		if(discoveredCamera.hasPassword())
+		{
+			setPassword(discoveredCamera.getPassword());
+		}
+		if(discoveredCamera.hasModelThumbnailUrl())
+		{
+			setModelThumbnail(discoveredCamera.getModelThumbnail());
+		}
+		if(discoveredCamera.hasVendorThumbnailUrl())
+		{
+			setVendorThumbnail(discoveredCamera.getVendorThumbnail());
+		}
+		if(discoveredCamera.hasJpgURL())
+		{
+			setJpg(discoveredCamera.getJpg());
+		}
+		if(discoveredCamera.hasH264URL())
+		{
+			setH264(discoveredCamera.getH264());
 		}
 
 		return this;

@@ -230,6 +230,7 @@ public class EvercamDiscover
 		}
 		
 		cameraList = mergeDuplicateCameraFromList(cameraList);
+
 		//Query ARP table again if MAC address is still empty after merging
 		fillMacAddressIfNotExist(cameraList);
 
