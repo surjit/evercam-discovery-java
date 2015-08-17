@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class NetworkInfoTest
 {
-	private final String TEST_IP = "10.0.0.16";
+	private final String TEST_IP = "10.0.0.25";
 	private final String TEST_NET_MASK = "255.255.255.0";
 	private final String TEST_EXTERNAL_IP = "5.149.169.19";
 	private final int TEST_CIDR = 24;
@@ -36,5 +36,23 @@ public class NetworkInfoTest
 	public void testExternalIp()
 	{
 		assertEquals(TEST_EXTERNAL_IP, NetworkInfo.getExternalIP());
+	}
+	
+	@Test
+	public void testValidIpv4()
+	{
+		String ipv41 = "192.168.1.1";
+		String ipv42 = "172.0.0.6";
+		String ipv43 = "89.101.130.1";
+		String wrongIpv4 = "(192.168.1.1)";
+		String ipv6 = "FE80:0000:0000:0000:0202:B3FF";
+		String wrongIpv6 = "(FE80:0000:0000:0000:0202:B3FF)";
+		
+		assertTrue(IpTranslator.isValidIpv4Addr(ipv41));
+		assertTrue(IpTranslator.isValidIpv4Addr(ipv42));
+		assertTrue(IpTranslator.isValidIpv4Addr(ipv43));
+		assertFalse(IpTranslator.isValidIpv4Addr(wrongIpv4));
+		assertFalse(IpTranslator.isValidIpv4Addr(ipv6));
+		assertFalse(IpTranslator.isValidIpv4Addr(wrongIpv6));
 	}
 }

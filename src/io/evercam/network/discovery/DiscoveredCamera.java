@@ -536,6 +536,11 @@ public class DiscoveredCamera implements Serializable
 	{
 		return !getName().isEmpty();
 	}
+	
+	public boolean hasValidIpv4Address()
+	{
+		return IpTranslator.isValidIpv4Addr(getIP());
+	}
 
 	/**
 	 * Merge camera 2 to camera 1, the values in cameras will be kept.

@@ -2,6 +2,7 @@ package io.evercam.network.onvif;
 
 import io.evercam.network.EvercamDiscover;
 import io.evercam.network.discovery.DiscoveredCamera;
+import io.evercam.network.discovery.IpTranslator;
 
 import java.io.StringReader;
 import java.net.DatagramPacket;
@@ -59,15 +60,15 @@ public abstract class OnvifDiscovery
 			while (true)
 			{
 				// System.out.println("Receiving...");
-				byte[] responseMessageByteArray = new byte[3072];
+				byte[] responseMessageByteArray = new byte[4000];
 				DatagramPacket datagramPacketRecieve = new DatagramPacket(responseMessageByteArray,
 						responseMessageByteArray.length);
 				datagramSocket.receive(datagramPacketRecieve);
 
 				String responseMessage = new String(datagramPacketRecieve.getData());
 
-				// System.out.println("\nResponse Message:\n" +
-				// responseMessage);
+//				EvercamDiscover.printLogMessage("\nResponse Message:\n" +
+//				responseMessage);
 
 				StringReader stringReader = new StringReader(responseMessage);
 				InputNode localInputNode = NodeBuilder.read(stringReader);
@@ -75,15 +76,14 @@ public abstract class OnvifDiscovery
 						EnvelopeProbeMatches.class, localInputNode);
 				if (localEnvelopeProbeMatches.BodyProbeMatches.ProbeMatches.listProbeMatches.size() <= 0)
 				{
-					// System.out.println("No probe matches");
 					continue;
 				}
 
 				ProbeMatch localProbeMatch = localEnvelopeProbeMatches.BodyProbeMatches.ProbeMatches.listProbeMatches
 						.get(0);
-				// System.out.println("Probe matches with UUID:\n" +
-				// localProbeMatch.EndpointReference.Address + " URL: " +
-				// localProbeMatch.XAddrs);
+//				EvercamDiscover.printLogMessage("Probe matches with UUID:\n" +
+//				 localProbeMatch.EndpointReference.Address + " URL: " +
+//				 localProbeMatch.XAddrs);
 				if (uuidArrayList.contains(localProbeMatch.EndpointReference.Address))
 				{
 					EvercamDiscover.printLogMessage("ONVIFDiscovery: Address "
@@ -92,8 +92,12 @@ public abstract class OnvifDiscovery
 				}
 				uuidArrayList.add(localProbeMatch.EndpointReference.Address);
 				DiscoveredCamera discoveredCamera = getCameraFromProbeMatch(localProbeMatch);
-				onActiveOnvifDevice(discoveredCamera);
-				cameraList.add(discoveredCamera);
+				
+				if(discoveredCamera.hasValidIpv4Address())
+				{
+					onActiveOnvifDevice(discoveredCamera);
+					cameraList.add(discoveredCamera);
+				}
 			}
 		}
 		catch (Exception e)
@@ -135,14 +139,32 @@ public abstract class OnvifDiscovery
 
 			try
 			{
-				URL localURL = new URL(urlArray[(-1 + urlArray.length)]);
-				discoveredCamera = new DiscoveredCamera(localURL.getHost());
-				int httpPort = localURL.getPort();
-				if (httpPort == -1)
+				String ipAddressString = "";
+				int httpPort = 0;
+				for(String urlString : urlArray)
 				{
-					httpPort = 80;
+					URL localURL = new URL(urlString);
+					String urlHost = localURL.getHost();
+					//Make sure it's a valid local IPv4 address 
+					if(IpTranslator.isLocalIpv4(urlHost))
+					{
+						ipAddressString = urlHost;
+						httpPort = localURL.getPort();
+						if (httpPort == -1)
+						{
+							httpPort = 80;
+						}
+					}
+					else
+					{
+						EvercamDiscover.printLogMessage("Discarded a ONVIF camera: " + urlHost);
+					}
+					break;
 				}
+				
+				discoveredCamera = new DiscoveredCamera(ipAddressString);
 				discoveredCamera.setHttp(httpPort);
+				
 				if (!scopeName.isEmpty())
 				{
 					discoveredCamera.setVendor(scopeName.toLowerCase(Locale.UK));

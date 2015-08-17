@@ -78,5 +78,17 @@ public class IpTranslator
 
 		return EMPTY_IP;
 	}
-
+	
+	/** This method is not in use */
+	public static boolean isValidIpv4Addr(String ip)
+	{
+		final String REGULAR_EXPRESSION_IP_V4 = "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9]{1,2})(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9]{1,2})){3}$";
+		return ip.matches(REGULAR_EXPRESSION_IP_V4);
+	}
+	
+	public static boolean isLocalIpv4(String ip)
+	{
+		final String REGULAR_EXPRESSION_LOCAL_IP = "(127.0.0.1)|(192.168.*$)|(172.1[6-9].*$)|(172.2[0-9].*$)|(172.3[0-1].*$)|(10.*$)";
+		return ip.matches(REGULAR_EXPRESSION_LOCAL_IP);
+	}
 }
