@@ -192,7 +192,6 @@ public class EvercamDiscover
 					public void onFinished()
 					{
 						queryCountDone++;
-
 					}
 				}.withDefaults(withDefaults));
 			}

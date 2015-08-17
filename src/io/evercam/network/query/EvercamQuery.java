@@ -7,6 +7,7 @@ import io.evercam.Model;
 import io.evercam.Vendor;
 import io.evercam.network.Constants;
 import io.evercam.network.EvercamDiscover;
+import io.evercam.network.discovery.DiscoveredCamera;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -114,7 +115,10 @@ public class EvercamQuery
 	 *            camera model ID for Evercam
 	 * @return If no image associated with the specified model, return logo URL
 	 *         for the specified vendor
+	 * @deprecated it's not recommend to use the vendor logo as thumbnail if model </br>
+	 * 			   does not exist.
 	 */
+	@Deprecated
 	public static String getThumbnailUrlFor(String vendorId, String modelId)
 	{
 		String thumbnailUrl = "";
@@ -138,6 +142,56 @@ public class EvercamQuery
 			thumbnailUrl = getVendorThumbnailUrl(vendorId);
 		}
 		return thumbnailUrl;
+	}
+	
+	/**
+	 * Fill all defaults (default username & password, JPG & H264 path and </br>
+	 * model & vendor thumbnail URLs) for the specified camera by sending API requests
+	 * 
+	 * @param discoveredCamera the discovered camera object, identification must </br>
+	 * 		  has been finished
+	 *	
+	 * @return the camera object with defaults info
+	 */
+	public static DiscoveredCamera fillDefaults(DiscoveredCamera discoveredCamera)
+	{
+		try
+		{
+			Model defaultModel = Vendor.getById(discoveredCamera.getVendor()).getDefaultModel();
+			Defaults defaults = defaultModel.getDefaults();
+			String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
+			String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
+			String jpgUrl = defaults.getJpgURL();
+			String h264Url = defaults.getH264URL();
+			
+			discoveredCamera.setUsername(username);
+			discoveredCamera.setPassword(password);
+			discoveredCamera.setJpg(jpgUrl);
+			discoveredCamera.setH264(h264Url);
+			
+			discoveredCamera.setVendorThumbnail(EvercamQuery
+					.getVendorThumbnailUrl(discoveredCamera.getVendor()));
+			
+			if(discoveredCamera.hasModel())
+			{
+				discoveredCamera.setModelThumbnail(EvercamQuery
+						.getModelThumbnailUrl(discoveredCamera.getModel()));
+			}
+			
+			if(!discoveredCamera.hasModelThumbnailUrl())
+			{
+				discoveredCamera.setModelThumbnail(defaultModel.getThumbnailUrl());
+			}
+		}
+		catch (EvercamException e)
+		{
+			if (Constants.ENABLE_LOGGING)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		return discoveredCamera;
 	}
 
 	public static String getModelThumbnailUrl(String modelId)
