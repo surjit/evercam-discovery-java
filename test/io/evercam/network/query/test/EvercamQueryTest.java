@@ -1,9 +1,8 @@
 package io.evercam.network.query.test;
 
 import static org.junit.Assert.*;
-import io.evercam.API;
 import io.evercam.EvercamException;
-import io.evercam.Vendor;
+import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.query.EvercamQuery;
 
 import org.junit.Test;
@@ -18,21 +17,22 @@ public class EvercamQueryTest
 	}
 	
 	@Test
-	public void testGetDefaults() throws EvercamException
-	{
-		Vendor hikvision = EvercamQuery.getCameraVendorByMac("8c:e7:48");
-		assertEquals("admin", EvercamQuery.getDefaultUsernameByVendor(hikvision));
-		assertEquals("12345",EvercamQuery.getDefaultPasswordByVendor(hikvision));
-		assertEquals("Streaming/Channels/1/picture", EvercamQuery.getDefaultJpgUrlByVendor(hikvision));
-		assertEquals("h264/ch1/main/av_stream", EvercamQuery.getDefaultH264UrlByVendor(hikvision));
-	}
-	
-	@Test
 	public void testGetThumbnailUrl() throws EvercamException
 	{
 		final String TEST_LOGO_URL = "http://evercam-public-assets.s3.amazonaws.com/hikvision/logo.jpg";
 		final String TEST_MODEL_URL = "http://evercam-public-assets.s3.amazonaws.com/hikvision/ds-2cd7164-e/thumbnail.jpg";
 		assertEquals(TEST_LOGO_URL, EvercamQuery.getThumbnailUrlFor("hikvision", "wrongModel"));
 		assertEquals(TEST_MODEL_URL, EvercamQuery.getThumbnailUrlFor("hikvision", "ds-2cd7164-e"));
+	}
+	
+	public void testFillCameraDefaults()
+	{
+		DiscoveredCamera testCamera = new DiscoveredCamera("192.168.0.88");
+		testCamera.setVendor("dlink");
+		testCamera.setModel("dcs-2121");
+		EvercamQuery.fillDefaults(testCamera);
+		assertEquals("play1.sdp", testCamera.getJpg());
+		assertEquals("http://evercam-public-assets.s3.amazonaws.com/dlink/dcs-2121/thumbnail.jpg", testCamera.getModelThumbnail());
+		assertEquals("http://evercam-public-assets.s3.amazonaws.com/dlink/logo.jpg", testCamera.getVendorThumbnail());
 	}
 }

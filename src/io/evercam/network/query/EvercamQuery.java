@@ -43,69 +43,6 @@ public class EvercamQuery
 		return null;
 	}
 
-	private static Defaults getDefaultsByVendor(Vendor vendor) throws EvercamException
-	{
-		return vendor.getDefaultModel().getDefaults();
-	}
-
-	/**
-	 * @param vendor
-	 *            Camera vendor returned from Evercam
-	 * @return the default username of the specified vendor
-	 * @throws EvercamException
-	 *             if no default values associated with this vendor
-	 */
-	public static String getDefaultUsernameByVendor(Vendor vendor) throws EvercamException
-	{
-		Defaults defaults = getDefaultsByVendor(vendor);
-		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
-
-		return auth == null ? "" : auth.getUsername();
-	}
-
-	/**
-	 * @param vendor
-	 *            Camera vendor returned from Evercam
-	 * @return the default password of the specified vendor
-	 * @throws EvercamException
-	 *             if no default values associated with this vendor
-	 */
-	public static String getDefaultPasswordByVendor(Vendor vendor) throws EvercamException
-	{
-		Defaults defaults = getDefaultsByVendor(vendor);
-		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
-
-		return auth == null ? "" : auth.getPassword();
-	}
-
-	/**
-	 * @param vendor
-	 *            Camera vendor returned from Evercam
-	 * @return the default JPG snapshot URL of the specified vendor
-	 * @throws EvercamException
-	 *             if no default values associated with this vendor
-	 */
-	public static String getDefaultJpgUrlByVendor(Vendor vendor) throws EvercamException
-	{
-		Defaults defaults = getDefaultsByVendor(vendor);
-
-		return defaults.getJpgURL();
-	}
-
-	/**
-	 * @param vendor
-	 *            Camera vendor returned from Evercam
-	 * @return the default h264 stream URL of the specified vendor
-	 * @throws EvercamException
-	 *             if no default values associated with this vendor
-	 */
-	public static String getDefaultH264UrlByVendor(Vendor vendor) throws EvercamException
-	{
-		Defaults defaults = getDefaultsByVendor(vendor);
-
-		return defaults.getH264URL();
-	}
-
 	/**
 	 * Retrieve thumbnail URL by specifying camera vendor and model
 	 * 
@@ -157,8 +94,36 @@ public class EvercamQuery
 	{
 		try
 		{
-			Model defaultModel = Vendor.getById(discoveredCamera.getVendor()).getDefaultModel();
-			Defaults defaults = defaultModel.getDefaults();
+			Model cameraModel = null;
+			Defaults defaults = null;
+			if(discoveredCamera.hasModel())
+			{
+				try
+				{
+					cameraModel =  Model.getById(discoveredCamera.getModel());
+				}
+				catch (Exception e)
+				{
+					EvercamDiscover.printLogMessage("Model " + discoveredCamera.getModel() + " doesn't exist");
+				}
+			}
+			
+			if(cameraModel != null)
+			{
+				discoveredCamera.setModelThumbnail(cameraModel.getThumbnailUrl());
+				defaults = cameraModel.getDefaults();
+			}
+			else 
+			{
+				Model defaultModel = Vendor.getById(discoveredCamera.getVendor()).getDefaultModel();
+				defaults = defaultModel.getDefaults();
+				
+				if(!discoveredCamera.hasModelThumbnailUrl())
+				{
+					discoveredCamera.setModelThumbnail(defaultModel.getThumbnailUrl());
+				}
+			}
+			
 			String username = defaults.getAuth(Auth.TYPE_BASIC).getUsername();
 			String password = defaults.getAuth(Auth.TYPE_BASIC).getPassword();
 			String jpgUrl = defaults.getJpgURL();
@@ -169,18 +134,10 @@ public class EvercamQuery
 			discoveredCamera.setJpg(jpgUrl);
 			discoveredCamera.setH264(h264Url);
 			
-			discoveredCamera.setVendorThumbnail(EvercamQuery
-					.getVendorThumbnailUrl(discoveredCamera.getVendor()));
-			
-			if(discoveredCamera.hasModel())
+			if(discoveredCamera.hasVendor())
 			{
-				discoveredCamera.setModelThumbnail(EvercamQuery
-						.getModelThumbnailUrl(discoveredCamera.getModel()));
-			}
-			
-			if(!discoveredCamera.hasModelThumbnailUrl())
-			{
-				discoveredCamera.setModelThumbnail(defaultModel.getThumbnailUrl());
+				discoveredCamera.setVendorThumbnail(EvercamQuery
+						.getVendorThumbnailUrl(discoveredCamera.getVendor()));
 			}
 		}
 		catch (EvercamException e)
@@ -194,6 +151,7 @@ public class EvercamQuery
 		return discoveredCamera;
 	}
 
+	@Deprecated
 	public static String getModelThumbnailUrl(String modelId)
 	{
 		if (!modelId.isEmpty())
@@ -205,7 +163,7 @@ public class EvercamQuery
 			}
 			catch (EvercamException e)
 			{
-				EvercamDiscover.printLogMessage("Model " + modelId + " doesn't exist");
+				
 			}
 		}
 		return "";
