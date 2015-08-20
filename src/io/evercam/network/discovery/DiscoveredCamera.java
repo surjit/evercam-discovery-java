@@ -608,23 +608,19 @@ public class DiscoveredCamera implements Serializable
 		return this;
 	}
 
-	public DiscoveredCamera mergePorts(ArrayList<Integer> portsList)
+	public DiscoveredCamera mergePorts(ArrayList<Port> portsList)
 	{
 		if (portsList.size() > 0)
 		{
-			for (Integer port : portsList)
+			for (Port port : portsList)
 			{
-				if (port == 80)
+				if (port.isHttp())
 				{
-					setHttp(port);
+					setHttp(port.getValue());
 				}
-				else if (port == 554)
+				else if (port.isRtsp())
 				{
-					setRtsp(port);
-				}
-				else if (port == 443)
-				{
-					setHttps(port);
+					setRtsp(port.getValue());
 				}
 			}
 		}

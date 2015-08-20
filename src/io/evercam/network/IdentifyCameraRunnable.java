@@ -3,6 +3,7 @@ package io.evercam.network;
 import io.evercam.Vendor;
 import io.evercam.network.discovery.DiscoveredCamera;
 import io.evercam.network.discovery.MacAddress;
+import io.evercam.network.discovery.Port;
 import io.evercam.network.discovery.PortScan;
 import io.evercam.network.query.EvercamQuery;
 
@@ -40,9 +41,9 @@ public abstract class IdentifyCameraRunnable implements Runnable
 						camera.setVendor(vendorId);
 
 						// Start port scan
-						PortScan portScan = new PortScan(null);
+						PortScan portScan = new PortScan();
 						portScan.start(ip);
-						ArrayList<Integer> activePortList = portScan.getActivePorts();
+						ArrayList<Port> activePortList = portScan.getActivePorts();
 
 						if (activePortList.size() > 0)
 						{

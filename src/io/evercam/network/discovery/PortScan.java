@@ -1,89 +1,91 @@
 package io.evercam.network.discovery;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class PortScan
 {
-	PortScanResult portScanResult;
-	private ArrayList<Integer> activePortList;
-	public final int[] STANDARD_PORTS =
-	{ 20, 21, 22, 80, 443, 554 };
-	public static final int TYPE_COMMON = 1;
-	public static final int TYPE_STANDARD = 0;
+	private ArrayList<Port> activePortList;
+	private PortScanCallback portScanCallback;
 
-	public PortScan(PortScanResult portScanResult)
+	public PortScan(PortScanCallback portScanCallback)
 	{
-		this.portScanResult = portScanResult;
+		this.portScanCallback = portScanCallback;
 	}
-
-	public static boolean isPortReachable(String ip, int port) throws Exception
+	
+	public PortScan()
 	{
-		try
-		{
-			Socket socket = new Socket();
-			socket.connect(new InetSocketAddress(ip, port), 1000);
-			socket.setSoTimeout(1000);
-
-			/**
-			 * Read from the stream to check if data exists in the stream
-			 * Because in E-Play the socket is connected even for closed ports
-			 */
-			int result;
-			try
-			{
-				InputStream inputStream = socket.getInputStream();
-				result = inputStream.read();
-				socket.close();
-
-			}
-			catch (Exception e)
-			{
-				// Timeout reading from the stream
-				// System.out.println("Exception read from stream");
-				// e.printStackTrace();
-				return true;
-			}
-
-			return result != -1;
-		}
-		catch (IOException e)
-		{
-			// System.out.println("Exception connect socket");
-			// e.printStackTrace();
-			return false;
-		}
+		
 	}
 
 	// scan both stand and common ports
 	public void start(String ip) throws Exception
 	{
-		activePortList = new ArrayList<Integer>();
-		scanByStandard(ip, STANDARD_PORTS);
+		activePortList = new ArrayList<Port>();
+		scanStandardPorts(ip);
+		scanCommonPorts(ip);
 	}
-
-	public void scanByStandard(String ip, int[] ports) throws Exception
+	
+	private ArrayList<Port> getStandardPortList()
 	{
-		int port;
-		for (int i = 0; i < ports.length; i++)
+		ArrayList<Port> portList = new ArrayList<>();
+		portList.add(new Port(Port.TYPE_HTTP, 80));
+		portList.add(new Port(Port.TYPE_RTSP, 554));
+		return portList;
+	}
+	
+	private void scanPort(String ip, Port port) throws Exception
+	{
+		if (Port.isReachable(ip, port.getValue()))
 		{
-			port = ports[i];
-			if (isPortReachable(ip, port))
+			// System.out.println("Active port added: " + ip + ":" + port);
+			port.isActive();
+			activePortList.add(port);
+
+			if(portScanCallback != null)
 			{
-				// System.out.println("Active port added: " + ip + ":" + port);
-				activePortList.add(port);
-				if (portScanResult != null)
-				{
-					portScanResult.onPortActive(port);
-				}
+				portScanCallback.onActivePort(port);
 			}
 		}
 	}
 
-	public ArrayList<Integer> getActivePorts() throws EvercamException
+	private void scanStandardPorts(String ip) throws Exception
+	{
+		ArrayList<Port> standardPorts = getStandardPortList();
+
+		for (Port port : standardPorts)
+		{
+			scanPort(ip,  port);
+		}
+	}
+	
+	/**
+	 * Scan the common ports that are frequently used by Evercam 
+	 * only when HTTP port(80) or RTSP port(554) is not open
+	 */
+	private void scanCommonPorts(String ip) throws Exception
+	{
+		String subIp = ip.substring(ip.lastIndexOf(".") + 1, ip.length());
+		int subIpInt = Integer.parseInt(subIp);
+		
+		ArrayList<String> activePortTypes = new ArrayList<>();
+		for(Port port : activePortList)
+		{
+			activePortTypes.add(port.getType());
+		}
+		
+		if(!activePortTypes.contains(Port.TYPE_HTTP))
+		{
+			Port commonHttpPort = new Port(Port.TYPE_HTTP, 8000 + subIpInt);
+			scanPort(ip, commonHttpPort);
+		}
+		if(!activePortTypes.contains(Port.TYPE_HTTP))
+		{
+			Port commonRtspPort = new Port(Port.TYPE_RTSP, 9000 + subIpInt);
+			scanPort(ip, commonRtspPort);
+		}
+	}
+
+	public ArrayList<Port> getActivePorts() throws EvercamException
 	{
 		if (activePortList != null)
 		{

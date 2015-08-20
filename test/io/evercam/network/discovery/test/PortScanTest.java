@@ -2,6 +2,7 @@ package io.evercam.network.discovery.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import io.evercam.network.discovery.Port;
 import io.evercam.network.discovery.PortScan;
 
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ public class PortScanTest
 	@Test
 	public void testScanPort() throws Exception
 	{
-		PortScan portScan = new PortScan(null);
+		PortScan portScan = new PortScan();
 		portScan.start("10.0.0.36");
-		ArrayList<Integer> activePortList = portScan.getActivePorts();
+		ArrayList<Port> activePortList = portScan.getActivePorts();
 		
-		for(Integer port : activePortList)
+		for(Port port : activePortList)
 		{
-			//System.out.println(port);
+			//System.out.println(port.getValue());
 		}
 		assertEquals(3, activePortList.size());
 	}
@@ -27,6 +28,6 @@ public class PortScanTest
 	@Test
 	public void testScanSinglePort() throws Exception
 	{
-		assertFalse(PortScan.isPortReachable("10.0.0.36", 8036));
+		assertFalse(Port.isReachable("10.0.0.36", 8036));
 	}
 }
