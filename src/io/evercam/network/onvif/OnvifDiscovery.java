@@ -67,8 +67,8 @@ public abstract class OnvifDiscovery
 
 				String responseMessage = new String(datagramPacketRecieve.getData());
 
-//				EvercamDiscover.printLogMessage("\nResponse Message:\n" +
-//				responseMessage);
+				EvercamDiscover.printLogMessage("\nResponse Message:\n" +
+				responseMessage);
 
 				StringReader stringReader = new StringReader(responseMessage);
 				InputNode localInputNode = NodeBuilder.read(stringReader);
@@ -121,22 +121,27 @@ public abstract class OnvifDiscovery
 		{
 			String[] urlArray = probeMatch.XAddrs.split("\\s");
 			String[] scopeArray = probeMatch.Scopes.split("\\s");
-			String scopeName = "";
-			String scopeHardware = "";
+			String scopeModel = "";
+			String scopeVendor = "";
 			for (String scope : scopeArray)
 			{
+				final String URL_SPACE = "%20";
 				if (scope.contains(SCOPE_NAME))
 				{
-					final String URL_SPACE = "%20";
-					scopeName = scope.replace(SCOPE_NAME, "").replace(URL_SPACE, " ");
+					scopeVendor = scope.replace(SCOPE_NAME, "").replace(URL_SPACE, " ");
 				}
 				if (scope.contains(SCOPE_HARDWARE))
 				{
-					final String URL_SPACE = "%20";
-					scopeHardware = scope.replace(SCOPE_HARDWARE, "").replace(URL_SPACE, " ");
+					scopeModel = scope.replace(SCOPE_HARDWARE, "").replace(URL_SPACE, " ");
 				}
 			}
-
+			
+			//Make the ONVIF scopes match vendor + model pattern
+			if(scopeVendor.contains(scopeModel))
+			{
+				scopeVendor = scopeVendor.replace(scopeModel, "").replace(" ", "");
+			}
+			
 			try
 			{
 				String ipAddressString = "";
@@ -154,24 +159,24 @@ public abstract class OnvifDiscovery
 						{
 							httpPort = 80;
 						}
+						break; //Only break when it gets a valid address
 					}
 					else
 					{
-						EvercamDiscover.printLogMessage("Discarded a ONVIF camera: " + urlHost);
+						EvercamDiscover.printLogMessage("Discarded a ONVIF IP: " + urlHost);
 					}
-					break;
 				}
 				
 				discoveredCamera = new DiscoveredCamera(ipAddressString);
 				discoveredCamera.setHttp(httpPort);
 				
-				if (!scopeName.isEmpty())
+				if (!scopeVendor.isEmpty())
 				{
-					discoveredCamera.setVendor(scopeName.toLowerCase(Locale.UK));
+					discoveredCamera.setVendor(scopeVendor.toLowerCase(Locale.UK));
 				}
-				if (!scopeHardware.isEmpty())
+				if (!scopeModel.isEmpty())
 				{
-					discoveredCamera.setModel(scopeHardware.toLowerCase(Locale.UK));
+					discoveredCamera.setModel(scopeModel.toLowerCase(Locale.UK));
 				}
 			}
 			catch (MalformedURLException localMalformedURLException)
@@ -183,6 +188,7 @@ public abstract class OnvifDiscovery
 		{
 			EvercamDiscover.printLogMessage("Parse ONVIF search result error: " + e.getMessage());
 		}
+		EvercamDiscover.printLogMessage("ONVIF camera: " + discoveredCamera.toString());
 		return discoveredCamera;
 	}
 
