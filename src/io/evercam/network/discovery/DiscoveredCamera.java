@@ -48,6 +48,7 @@ public class DiscoveredCamera implements Serializable
 	private int active = 0; // 1:yes 0:no
 	private String vendorThumbnailUrl = "";
 	private String modelThumbnailUrl = "";
+	private String notes = "";
 
 	public DiscoveredCamera(String ip)
 	{
@@ -401,6 +402,16 @@ public class DiscoveredCamera implements Serializable
 		return false;
 	}
 
+	public String getNotes()
+	{
+		return notes;
+	}
+
+	public void setNotes(String notes)
+	{
+		this.notes = notes;
+	}
+
 	public boolean hasRTSP()
 	{
 		if (getRtsp() != 0)
@@ -648,7 +659,27 @@ public class DiscoveredCamera implements Serializable
 		jsonOrderedMap.put("rtsp_h264_path", getH264());
 		jsonOrderedMap.put("vendor_thumbnail_url", getVendorThumbnail());
 		jsonOrderedMap.put("model_thumbnail_url", getModelThumbnail());
+		jsonOrderedMap.put("notes", getNotes());
 
 		return new JSONObject(jsonOrderedMap);
+	}
+	
+	/**
+	 * Check if two cameras with different IP address duplicate with each other
+	 * 
+	 * @param camera the discovered camera to compare to
+	 * @return true if they duplicate, otherwise return false
+	 */
+	public boolean isduplicateWith(DiscoveredCamera camera)
+	{
+		if(camera == null) return false;
+		if(camera.getHttp() == getHttp() && camera.getRtsp() == getRtsp() &&
+		   camera.getMAC().equals(getMAC()) && !camera.getIP().equals(getIP()) &&
+		   camera.getVendor().equals(getVendor()) && camera.getModel().equals(getModel()) &&
+		   camera.getExthttp() == getExthttp() && camera.getExtrtsp() == getExtrtsp()) 
+		{
+			return true;
+		}
+		return false;
 	}
 }

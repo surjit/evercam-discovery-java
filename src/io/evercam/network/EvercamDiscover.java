@@ -229,7 +229,7 @@ public class EvercamDiscover
 			Thread.currentThread().interrupt();
 		}
 		
-		cameraList = mergeDuplicateCameraFromList(cameraList);
+		mergeDuplicateCameraFromList(cameraList);
 
 		//Query ARP table again if MAC address is still empty after merging
 		fillMacAddressIfNotExist(cameraList);
@@ -314,29 +314,63 @@ public class EvercamDiscover
 		}
 		return camera;
 	}
-	
+    
 	/**
-	 * Review the camera list and merge cameras with the same IP address
+	 * 1. Review the camera list and merge cameras with the same IP address
+	 * 2. Review the camera list and if any of them has duplicate MAC address but 
+	 * are actually the same device, then discard one of them and add a note.
 	 * 
 	 * @param the re-organized camera list
 	 */
-    public static ArrayList<DiscoveredCamera> mergeDuplicateCameraFromList(ArrayList<DiscoveredCamera> cameraList) 
-    {
-        Map<String, DiscoveredCamera> cameraHashMap = new HashMap<>();
-        for (DiscoveredCamera camera: cameraList) 
-        {
-            String ip = camera.getIP();
-            DiscoveredCamera tempCamera = cameraHashMap.get(ip);
-            if (tempCamera == null) 
-            {
-                tempCamera = new DiscoveredCamera(ip);
-                cameraHashMap.put(ip, tempCamera);
-            }
-            tempCamera.merge(camera);
-        }
+    public static void mergeDuplicateCameraFromList(ArrayList<DiscoveredCamera> cameraList)
+	{
+		boolean duplicate = false;
+		do
+		{
+			duplicate = false;
+			int listSize = cameraList.size();
+			outsideLoop: for (int index1 = 0 ; index1 < listSize ; index1 ++)
+			{
+				DiscoveredCamera camera1 = cameraList.get(index1);
+				String ip1 = camera1.getIP();
+				String mac1 = camera1.getMAC();
+				
+				for(int index2 = index1 + 1; index2 < listSize ; index2 ++)
+				{
+					DiscoveredCamera camera2 = cameraList.get(index2);
+					String ip2 = camera2.getIP();
+					String mac2 = camera2.getMAC();
 
-       return new ArrayList<>(cameraHashMap.values());
-    }
+					if(ip1.equals(ip2))
+					{
+						duplicate = true;
+						
+						//Merge camera object on the original list
+						camera1.merge(camera2);
+					
+						//Remove camera from the original list
+						cameraList.remove(index2);
+					
+						break outsideLoop;
+					}
+					/**
+					 * If the two cameras has different IP but have the same MAC address,
+					 * 
+					 */
+					else if(!mac1.isEmpty() && !mac2.isEmpty() && mac1.equals(mac2)
+							&& camera1.isduplicateWith(camera2))
+					{
+						duplicate = true;
+						
+						camera1.setNotes("Duplicate MAC address with another IP address: " + ip2);
+						cameraList.remove(camera2);
+						
+						break outsideLoop;
+					}
+				}
+			}
+		} while (duplicate);
+	}
 	
 	/**
 	 * If MAC address doesn't exist in camera object, query ARP table again
