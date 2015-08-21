@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import io.evercam.network.discovery.EvercamException;
 import io.evercam.network.discovery.UpnpDevice;
 import io.evercam.network.discovery.UpnpDiscovery;
-import io.evercam.network.discovery.UpnpResult;
-
 import org.junit.Test;
 
 public class UpnpDiscoveryTest

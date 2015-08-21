@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import io.evercam.network.discovery.IpScan;
-import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
 import io.evercam.network.discovery.ScanResult;
 
