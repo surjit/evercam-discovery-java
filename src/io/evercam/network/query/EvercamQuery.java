@@ -112,6 +112,7 @@ public class EvercamQuery
 			{
 				discoveredCamera.setModelThumbnail(cameraModel.getThumbnailUrl());
 				defaults = cameraModel.getDefaults();
+				discoveredCamera.setVendor(cameraModel.getVendorId());
 			}
 			else 
 			{
