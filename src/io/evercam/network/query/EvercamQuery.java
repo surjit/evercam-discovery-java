@@ -42,6 +42,74 @@ public class EvercamQuery
 		}
 		return null;
 	}
+	
+	@Deprecated
+	private static Defaults getDefaultsByVendor(Vendor vendor) throws EvercamException
+	{
+		return vendor.getDefaultModel().getDefaults();
+	}
+
+	/**
+	 * @param vendor
+	 *            Camera vendor returned from Evercam
+	 * @return the default username of the specified vendor
+	 * @throws EvercamException
+	 *             if no default values associated with this vendor
+	 */
+	@Deprecated
+	public static String getDefaultUsernameByVendor(Vendor vendor) throws EvercamException
+	{
+		Defaults defaults = getDefaultsByVendor(vendor);
+		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
+
+		return auth == null ? "" : auth.getUsername();
+	}
+
+	/**
+	 * @param vendor
+	 *            Camera vendor returned from Evercam
+	 * @return the default password of the specified vendor
+	 * @throws EvercamException
+	 *             if no default values associated with this vendor
+	 */
+	@Deprecated
+	public static String getDefaultPasswordByVendor(Vendor vendor) throws EvercamException
+	{
+		Defaults defaults = getDefaultsByVendor(vendor);
+		Auth auth = defaults.getAuth(Auth.TYPE_BASIC);
+
+		return auth == null ? "" : auth.getPassword();
+	}
+
+	/**
+	 * @param vendor
+	 *            Camera vendor returned from Evercam
+	 * @return the default JPG snapshot URL of the specified vendor
+	 * @throws EvercamException
+	 *             if no default values associated with this vendor
+	 */
+	@Deprecated
+	public static String getDefaultJpgUrlByVendor(Vendor vendor) throws EvercamException
+	{
+		Defaults defaults = getDefaultsByVendor(vendor);
+
+		return defaults.getJpgURL();
+	}
+
+	/**
+	 * @param vendor
+	 *            Camera vendor returned from Evercam
+	 * @return the default h264 stream URL of the specified vendor
+	 * @throws EvercamException
+	 *             if no default values associated with this vendor
+	 */
+	@Deprecated
+	public static String getDefaultH264UrlByVendor(Vendor vendor) throws EvercamException
+	{
+		Defaults defaults = getDefaultsByVendor(vendor);
+
+		return defaults.getH264URL();
+	}
 
 	/**
 	 * Retrieve thumbnail URL by specifying camera vendor and model
