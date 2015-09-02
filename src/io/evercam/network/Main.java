@@ -92,9 +92,9 @@ public class Main
 		}
 	}
 
-	private static void printAsJson(ArrayList<DiscoveredCamera> cameraList)
+	public static void printAsJson(ArrayList<DiscoveredCamera> cameraList)
 	{
-		if (cameraList.size() > 0)
+		if (cameraList != null)
 		{
 			JSONArray jsonArray = new JSONArray();
 
