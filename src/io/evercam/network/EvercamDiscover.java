@@ -11,6 +11,7 @@ import io.evercam.network.discovery.ScanResult;
 import io.evercam.network.discovery.UpnpDevice;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -74,21 +75,25 @@ public class EvercamDiscover
 			printLogMessage("Discovering ONVIF devices......");
 			// Start UPnP discovery
 			pool.execute(upnpRunnable);
-			printLogMessage("Discovering UPnP devices......");
-			// Start UPnP router discovery
-			pool.execute(new NatRunnable(scanRange.getRouterIpString())
+			
+			if(scanRange.getRouterIpString().equals(NetworkInfo.getLinuxRouterIp()))
 			{
-				@Override
-				public void onFinished(ArrayList<NatMapEntry> mapEntries)
+				// Start UPnP router discovery
+				printLogMessage("Discovering UPnP devices......");
+				pool.execute(new NatRunnable(scanRange.getRouterIpString())
 				{
-					printLogMessage("NAT discovery finished.");
-					if (mapEntries != null)
+					@Override
+					public void onFinished(ArrayList<NatMapEntry> mapEntries)
 					{
-						EvercamDiscover.this.mapEntries = mapEntries;
+						printLogMessage("NAT discovery finished.");
+						if (mapEntries != null)
+						{
+							EvercamDiscover.this.mapEntries = mapEntries;
+						}
+						natDone = true;
 					}
-					natDone = true;
-				}
-			});
+				});
+			}
 			printLogMessage("Discovering NAT table......");
 		}
 

@@ -5,12 +5,17 @@ import io.evercam.network.discovery.NetworkInfo;
 import io.evercam.network.discovery.ScanRange;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Main
 {
+	private static final String ARG_IP = "-ip";
+	private static final String ARG_SUBNET_MASK = "-m";
+	
 	/**
 	 * Discover all cameras in local network and print them in console
 	 * 
@@ -19,34 +24,29 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		// InputStreamReader inputStream = new InputStreamReader(System.in);
-		// BufferedReader keyboardInput = new BufferedReader(inputStream);
-		//
-		// String routerIp = "", subnetMask = "";
-		// try
-		// {
-		// System.out.println("Please enter router IP: eg. 10.0.0.1");
-		// routerIp = keyboardInput.readLine();
-		//
-		// System.out.println("Please enter subnet mask: eg. 255.255.255.0");
-		// subnetMask = keyboardInput.readLine();
-		// }
-		// catch (IOException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		String ip = "";
+		String subnetMask = "";
 
 		if (args.length > 0)
 		{
-			if (args[0].equals("-v") || args[0].equals("--verbose"))
+			List<String> argsArray = Arrays.asList(args);
+			if(argsArray.contains("-v") || argsArray.contains("--verbose"))
 			{
 				Constants.ENABLE_LOGGING = true;
 			}
+			
+			if(argsArray.contains(ARG_IP) && argsArray.contains(ARG_SUBNET_MASK))
+			{
+				int ipIndex = argsArray.indexOf(ARG_IP) + 1;
+				int subnetIndex = argsArray.indexOf(ARG_SUBNET_MASK) + 1;
+				
+				ip = argsArray.get(ipIndex);
+				subnetMask = argsArray.get(subnetIndex);
+			}
 		}
 
-		String routerIp = NetworkInfo.getLinuxRouterIp();
-		String subnetMask = NetworkInfo.getLinuxSubnetMask();
+		if(ip.isEmpty()) ip = NetworkInfo.getLinuxRouterIp();
+		if(subnetMask.isEmpty()) subnetMask = NetworkInfo.getLinuxSubnetMask();
 
 		// String deviceIp = "";
 		// String subnetMask = "";
@@ -62,13 +62,13 @@ public class Main
 		// {
 		// // TODO: handle exception
 		// }
-		EvercamDiscover.printLogMessage("Router IP address: " + routerIp + " subnet mask: "
+		EvercamDiscover.printLogMessage("Router IP address: " + ip + " subnet mask: "
 				+ subnetMask);
 		EvercamDiscover.printLogMessage("Scanning...");
 
 		try
 		{
-			ScanRange scanRange = new ScanRange(routerIp, subnetMask);
+			ScanRange scanRange = new ScanRange(ip, subnetMask);
 
 			ArrayList<DiscoveredCamera> cameraList = new EvercamDiscover().withDefaults(true)
 					.discoverAllLinux(scanRange);
