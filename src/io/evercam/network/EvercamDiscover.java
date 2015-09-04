@@ -12,6 +12,7 @@ import io.evercam.network.discovery.UpnpDevice;
 
 import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -182,6 +183,7 @@ public class EvercamDiscover
 			}
 		}
 
+		discardOnvifDeviceIfNotInScanRange(scanRange);
 		// Merge ONVIF devices to discovered camera list
 		mergeOnvifDeviceListToCameraList();
 
@@ -405,8 +407,35 @@ public class EvercamDiscover
 			onvifDeviceList.add(discoveredCamera);
 		}
 	};
+	
+	private void discardOnvifDeviceIfNotInScanRange(ScanRange scanRange)
+	{
+		@SuppressWarnings("unchecked")
+		ArrayList<DiscoveredCamera> clonedList = (ArrayList<DiscoveredCamera>) onvifDeviceList.clone();
+		if (onvifDeviceList.size() > 0)
+		{
+			for(DiscoveredCamera discoveredCamera : onvifDeviceList)
+			{
+				try
+				{
+					if(!scanRange.containIp(discoveredCamera.getIP()))
+					{
+						EvercamDiscover.printLogMessage("Removing ONVIF device: " + discoveredCamera.getIP());
+						clonedList.remove(discoveredCamera);
+					}
+				}
+				catch (Exception e)
+				{
+					if(Constants.ENABLE_LOGGING)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+			onvifDeviceList = clonedList;}
+	}
 
-	public void mergeOnvifDeviceListToCameraList()
+	private void mergeOnvifDeviceListToCameraList()
 	{
 		if (onvifDeviceList.size() > 0)
 		{

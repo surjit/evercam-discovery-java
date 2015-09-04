@@ -6,13 +6,14 @@ public class ScanRange
 	private String routerIpString;
 	private long scanStart;
 	private long scanEnd;
+	private int cidr;
 
 	public ScanRange(String routerIp, String subnetMask) throws Exception
 	{
 		this.routerIp = IpTranslator.getUnsignedLongFromIp(routerIp);
 		this.routerIpString = routerIp;
 
-		int cidr = IpTranslator.maskIpToCidr(subnetMask);
+		cidr = IpTranslator.maskIpToCidr(subnetMask);
 		setUpStartAndEnd(cidr);
 	}
 
@@ -39,6 +40,16 @@ public class ScanRange
 			scanStart = (routerIp >> shift << shift);
 			scanEnd = (scanStart | ((1 << shift) - 1));
 		}
+	}
+	
+	/**
+	 * @return true if the given IP is in this scan range
+	 */
+	public boolean containIp(String ip) throws Exception
+	{
+		int shift = (32 - cidr);
+		long ipLong = IpTranslator.getUnsignedLongFromIp(ip);
+		return scanStart == ((ipLong >> shift << shift) + 1);
 	}
 
 	public int size()

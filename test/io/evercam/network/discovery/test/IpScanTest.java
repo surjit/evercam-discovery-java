@@ -62,4 +62,12 @@ public class IpScanTest
 		assertTrue(ipList.size() > 5);
 		ipList.clear();
 	}
+	
+	@Test
+	public void testScanRange() throws Exception
+	{
+		ScanRange scanRange = new ScanRange(TEST_IP, TEST_NET_MASK);
+		assertTrue(scanRange.containIp(TEST_ACTIVE_IP));
+		assertFalse(scanRange.containIp("192.168.1.6"));
+	}
 }
