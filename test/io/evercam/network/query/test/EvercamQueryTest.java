@@ -25,13 +25,14 @@ public class EvercamQueryTest
 		assertEquals(TEST_MODEL_URL, EvercamQuery.getThumbnailUrlFor("hikvision", "ds-2cd7164-e"));
 	}
 	
+	@Test
 	public void testFillCameraDefaults()
 	{
 		DiscoveredCamera testCamera = new DiscoveredCamera("192.168.0.88");
 		testCamera.setVendor("dlink");
-		testCamera.setModel("dcs-2121");
+		testCamera.setModel("DCS-2121");
 		EvercamQuery.fillDefaults(testCamera);
-		assertEquals("play1.sdp", testCamera.getJpg());
+		assertEquals("play1.sdp", testCamera.getH264());
 		assertEquals("http://evercam-public-assets.s3.amazonaws.com/dlink/dcs-2121/thumbnail.jpg", testCamera.getModelThumbnail());
 		assertEquals("http://evercam-public-assets.s3.amazonaws.com/dlink/logo.jpg", testCamera.getVendorThumbnail());
 	}

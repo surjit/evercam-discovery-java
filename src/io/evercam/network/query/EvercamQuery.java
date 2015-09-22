@@ -168,7 +168,7 @@ public class EvercamQuery
 			{
 				try
 				{
-					cameraModel =  Model.getById(discoveredCamera.getModel());
+					cameraModel =  Model.getById(discoveredCamera.getModel().toLowerCase(Locale.UK));
 				}
 				catch (Exception e)
 				{
